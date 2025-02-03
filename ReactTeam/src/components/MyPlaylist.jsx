@@ -5,7 +5,7 @@ import usePromise from '../lib/usePromise';
 const MyPlaylist = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/me/playlists'; // 요청할 api 선정
   // api 요청
-  const request = () => {
+  const request = () =>
     axios.get(
       endpoint,
       // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
@@ -19,7 +19,7 @@ const MyPlaylist = ({ authorization }) => {
         },
       },
     );
-  };
+
   // 강의시간에 썼던 api 요청 결과 가져오기
   const [loading, resolved, error] = usePromise(request, []);
 
@@ -38,23 +38,30 @@ const MyPlaylist = ({ authorization }) => {
     return null;
   }
 
-  // 구조파괴 할당
-  const items = resolved.data.items;
-  items.map((item) => {
-    console.log(item.images);
-    return (
-      <div key={item.id}>
-        <img
-          src={item.images.map((image) => {
-            return image.url;
-          })}
-          alt=""
-        />
-        <div>재생목록 아이디: {item.id}</div>
-        <div>재생목록 이름: {item.name}</div>
+  // 응답 데이터 구조 분해 할당
+  const playlists = resolved.data.items;
+
+  return (
+    <div>
+      <h2>내 플레이리스트</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+        {playlists.map((playlist) => (
+          <div key={playlist.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
+            {/* 플레이리스트 이미지 (없으면 기본 이미지) */}
+            <img
+              src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
+              alt={playlist.name}
+              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+            />
+            <div>
+              <strong>{playlist.name}</strong>
+            </div>
+            <div>곡 개수: {playlist.tracks.total}곡</div>
+          </div>
+        ))}
       </div>
-    );
-  });
+    </div>
+  );
 };
 
 export default MyPlaylist;
