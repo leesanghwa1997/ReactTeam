@@ -36,7 +36,7 @@ const GetSeveralBrowseCategories = ({ authorization }) => {
 
   return (
     <div>
-      <h2>메인 페이지 카테고리</h2>
+      <h2>GetSeveralBrowseCategories.jsx</h2>
       <ul>
         {items.map((category) => (
           <li key={category.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>

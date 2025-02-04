@@ -10,7 +10,7 @@ const Api = ({ category, data }) => {
   // 이 authorization 을 컴포넌트마다 props로 전달
   switch (category) {
     case 'main':
-      return <Main authorization={authorization} />;
+      return <Main authorization={authorization} />
     case 'profile':
       return <SpotifyUserProfile authorization={authorization} />;
     case 'playlist':
