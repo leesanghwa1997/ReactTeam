@@ -1,4 +1,4 @@
-import { usePlayback } from './PlaybackContext';
+import { usePlayback } from '../contextAPI/PlaybackProvider';
 
 const PlaybackControls = ({ token }) => {
   const { deviceId } = usePlayback();
