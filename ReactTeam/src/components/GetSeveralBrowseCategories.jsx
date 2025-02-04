@@ -2,47 +2,51 @@ import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
 
-// 여러개를 가져올땐 id는 , 로 연결되어야함
 const GetSeveralBrowseCategories = ({ authorization }) => {
-  const endpoint = `https://api.spotify.com/v1/browse/categories`; // 요청할 api 선정
+  const endpoint = `https://api.spotify.com/v1/browse/categories`;
 
   const request = () => {
-    axios.get(
-      endpoint,
-      // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
-      {
-        params: {
-          locale: 'kr_KR',
-          limit: 20,
-          offset: 5,
-        },
-        headers: {
-          Authorization: authorization,
-        },
+    return axios.get(endpoint, {
+      params: {
+        locale: 'kr_KR',
+        limit: 10,
+        offset: 5,
       },
-    );
+      headers: {
+        Authorization: authorization,
+      },
+    });
   };
-  // 강의시간에 썼던 api 요청 결과 가져오기
+
   const [loading, resolved, error] = usePromise(request, []);
 
-  // 에러
   if (error) {
-    return <p>에러 발생: {error}</p>;
+    return <p>에러 발생: {error.message}</p>;
   }
 
-  // 아직 답이 안돌아왔으면 표시
   if (loading) {
     return <p>로딩중...</p>;
   }
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
   if (!resolved) {
     return null;
   }
-  const items = resolved.data.items;
-  console.log(items);
 
-  return <div></div>;
+  const items = resolved.data.categories.items; // 변경됨
+
+  return (
+    <div>
+      <h2>Spotify 카테고리</h2>
+      <ul>
+        {items.map((category) => (
+          <li key={category.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <img src={category.icons[0]?.url} alt={category.name} width="50" height="50" style={{ marginRight: '10px' }} />
+            {category.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default GetSeveralBrowseCategories;
