@@ -13,7 +13,9 @@ const SpotifyLogin = () => {
   const handleLogin = () => {
     window.location.href = `${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI,
-    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`;
+    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(
+      SCOPE,
+    )}&show_dialog=true`;
   };
 
   // listener
