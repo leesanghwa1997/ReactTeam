@@ -9,7 +9,7 @@ const GetSeveralBrowseCategories = ({ authorization }) => {
     return axios.get(endpoint, {
       params: {
         locale: 'kr_KR',
-        limit: 10,
+        limit: 5,
         offset: 5,
       },
       headers: {
