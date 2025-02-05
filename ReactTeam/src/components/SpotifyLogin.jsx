@@ -23,9 +23,7 @@ const SpotifyLogin = () => {
   const handleLogin = () => {
     window.location.href = `${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI,
-    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(
-      SCOPE,
-    )}&show_dialog=true`;
+    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`;
   };
 
   // 기본 선택된 항목들
@@ -58,7 +56,7 @@ const SpotifyLogin = () => {
   // listener
   return (
     <>
-      <div id="intro" className="wrap">
+      <div id="intro">
         <div id="introHeader">
           <div className="container">
             <Link to="/" className="intro">
