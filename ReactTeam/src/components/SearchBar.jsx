@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { SearchContext } from '../contextAPI/SearchProvider';
+import './SearchBar.css';
+import search from '../assets/images/search.svg';
 
 const SearchBar = ({ authorization }) => {
     const { setSearchResults } = useContext(SearchContext);
@@ -48,37 +49,15 @@ const SearchBar = ({ authorization }) => {
     };
 
     return (
-        <div>
-            <h2>검색</h2>
+        <div id='search'>
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     value={query}
                     onChange={handleSearch}
-                    placeholder="검색어를 입력하세요..."
-                    style={{
-                        padding: '10px',
-                        fontSize: '16px',
-                        width: '100%',
-                        borderRadius: '4px',
-                        border: '1px solid #ddd',
-                    }}
+                    placeholder="검색"
                 />
-                <button
-                    type="submit"
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        backgroundColor: '#1DB954',
-                        border: 'none',
-                        color: '#fff',
-                        cursor: 'pointer',
-                        borderRadius: '4px',
-                        marginTop: '10px',
-                    }}
-                >
-                    검색
-                </button>
+                <button type="submit"> <img src={search} alt="search" /></button>
             </form>
 
             {loading && <p>로딩중...</p>}
