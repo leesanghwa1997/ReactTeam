@@ -8,7 +8,7 @@ import { usePlayback } from '../contextAPI/PlaybackProvider';
 
 const Main = ({ authorization }) => {
     return (
-        <div>
+        <div className='slide'>
             <h1>최신 발매 앨범</h1>
             <NewReleases authorization={authorization} />
             <h1>내 플레이 리스트</h1>
