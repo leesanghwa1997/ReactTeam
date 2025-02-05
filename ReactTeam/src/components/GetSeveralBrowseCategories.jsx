@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-import { Link } from 'react-router-dom';
+import GetCategoryPlaylists from './GetCategoryPlaylists';
 
 const GetSeveralBrowseCategories = ({ authorization }) => {
   const endpoint = `https://api.spotify.com/v1/browse/categories`;
@@ -33,20 +33,17 @@ const GetSeveralBrowseCategories = ({ authorization }) => {
     return null;
   }
 
-  const items = resolved.data.categories.items; // 변경됨
+  const categories = resolved.data.categories.items; // 카테고리 항목들
 
   return (
     <div>
-      <h2>Spotify 카테고리</h2>
-      <ul>
-        {items.map((category) => (
-          <li key={category.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-            <img src={category.icons[0]?.url} alt={category.name} width="50" height="50" style={{ marginRight: '10px' }} />
-            {category.name}
-            <Link to={category.href}>aasd</Link>
-          </li>
-        ))}
-      </ul>
+      <h2>Spotify 카테고리별 플레이리스트</h2>
+      {categories.map((category) => (
+        <div key={category.id}>
+          <h3>{category.name}</h3>
+          <GetCategoryPlaylists authorization={authorization} categoryId={category.id} />
+        </div>
+      ))}
     </div>
   );
 };

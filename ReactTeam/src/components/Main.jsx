@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useParams, Navigate } from 'react-router-dom';
 import GetSeveralBrowseCategories from '../components/GetSeveralBrowseCategories';
 import MyPlaylist from '../components/MyPlaylist';
+import FeaturedPlaylists from '../components/FeaturedPlaylists'; // 추가
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 
 const Main = () => {
@@ -17,7 +18,11 @@ const Main = () => {
     return (
         <div>
             <h1>Spotify Browse Categories</h1>
-            <GetSeveralBrowseCategories authorization={`${data.token_type} ${data.access_token}`} />
+            {/* <GetSeveralBrowseCategories authorization={`${data.token_type} ${data.access_token}`} /> */}
+
+            <h1>추천 플레이리스트</h1>
+            <FeaturedPlaylists authorization={`${data.token_type} ${data.access_token}`} /> {/* 추가 */}
+
             <h1>내 플레이 리스트</h1>
             <MyPlaylist authorization={`${data.token_type} ${data.access_token}`} />
         </div>
