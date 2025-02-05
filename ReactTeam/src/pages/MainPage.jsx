@@ -6,6 +6,7 @@ import SpotifyPlayer from '../components/SpotifyPlayer';
 import PlaybackControls from '../components/PlaybackControls';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import { useAuth } from '../contextAPI/AuthProvider';
+import SearchBar from '../components/SearchBar';
 
 const MainPage = () => {
   const { tokenData, setTokenData } = useAuth();
@@ -30,6 +31,7 @@ const MainPage = () => {
   // 일단 categories 컴포넌트와 api 호출용 컴포넌트 부름
   return (
     <div className='wrap'>
+      <SearchBar authorization={tokenData?.access_token} />
       <Categories />
       <div className='contents'>
         {tokenData && <Api category={category} />}
