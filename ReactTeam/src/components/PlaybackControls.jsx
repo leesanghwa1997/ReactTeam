@@ -1,7 +1,9 @@
 import { usePlayback } from '../contextAPI/PlaybackProvider';
+import { useAuth } from '../contextAPI/AuthProvider';
 
-const PlaybackControls = ({ token }) => {
+const PlaybackControls = () => {
   const { deviceId } = usePlayback();
+  const token = useAuth().tokenData.access_token;
 
   const handlePlayPause = async () => {
     await fetch(
