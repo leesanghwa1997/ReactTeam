@@ -31,6 +31,7 @@ const MainPage = () => {
   // 일단 categories 컴포넌트와 api 호출용 컴포넌트 부름
   return (
     <div className='wrap'>
+      <SearchBar authorization={tokenData?.access_token} />
       <Categories />
       <div className='contents'>
         {tokenData && <Api category={category} />}
