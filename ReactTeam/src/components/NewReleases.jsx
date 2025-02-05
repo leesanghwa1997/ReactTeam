@@ -9,7 +9,7 @@ const NewReleases = ({ authorization }) => {
   const request = () =>
     axios.get(endpoint, {
       params: {
-        limit: 20,
+        limit: 10,
       },
       headers: {
         Authorization: authorization,

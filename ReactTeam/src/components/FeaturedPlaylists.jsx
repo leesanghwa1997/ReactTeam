@@ -8,7 +8,7 @@ const FeaturedPlaylists = ({ authorization }) => {
     const request = () => {
         return axios.get(endpoint, {
             headers: {
-                Authorization: `Bearer ${authorization}`,
+                Authorization: authorization,
             },
         });
     };

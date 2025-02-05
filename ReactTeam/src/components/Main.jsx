@@ -18,17 +18,18 @@ const Main = () => {
 
     return (
         <div>
-            <h1>Spotify Browse Categories</h1>
-            {/* <GetSeveralBrowseCategories authorization={`${data.token_type} ${data.access_token}`} /> */}
 
-            <h1>추천 플레이리스트</h1>
-            <FeaturedPlaylists authorization={`${data.token_type} ${data.access_token}`} />
-
+            <h1>최신 발매 앨범</h1>
+            <NewReleases authorization={`${data.token_type} ${data.access_token}`} />
             <h1>내 플레이 리스트</h1>
             <MyPlaylist authorization={`${data.token_type} ${data.access_token}`} />
 
-            <h1>최신 발매 앨범</h1>
-            <NewReleases authorization={`${data.token_type} ${data.access_token}`} /> {/* 추가 */}
+
+            {/* <h1>Spotify Browse Categories</h1> */}
+            {/* <GetSeveralBrowseCategories authorization={`${data.token_type} ${data.access_token}`} /> */}
+
+            {/* <h1>추천 플레이리스트</h1> */}
+            {/* <FeaturedPlaylists authorization={`${data.token_type} ${data.access_token}`} /> */}
         </div>
     );
 };
