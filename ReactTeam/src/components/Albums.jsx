@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-
+// pr 연습용
 // 여러개를 가져올땐 id는 , 로 연결되어야함
 const Albums = ({ authorization, id }) => {
   const endpoint = 'https://api.spotify.com/v1/albums'; // 요청할 api 선정

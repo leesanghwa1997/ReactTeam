@@ -68,6 +68,25 @@ button {
     outline: none;
 }
 
+button.btn {
+    height: 40px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 20px;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button.dark {
+    background: rgba(255 255 255 / 0.2);
+    color: #666;
+}
+
+button.dark:hover {
+    color: #fff;
+}
+
+
 body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
@@ -104,7 +123,10 @@ button.round:hover {
 
 /* sideMenu */
 #sideMenu {
+    position: sticky;
+    top: 0;
     width: 400px;
+    height: 100vh;
     padding: 0 40px;
     border-right: 1px solid rgba(255 255 255 / 0.2);
     overflow: auto;
@@ -163,12 +185,23 @@ button.round:hover {
     width: 40px;
 }
 
+/* head */
+#head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 50px;
+}
 
 
 
+
+
+/* contents */
 .contents {
     flex: 1;
     max-width: calc(100vw - 400px);
+    padding: 40px;
 }
 
 

@@ -6,6 +6,7 @@ import SpotifyPlayer from '../components/SpotifyPlayer';
 import PlaybackControls from '../components/PlaybackControls';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import { useAuth } from '../contextAPI/AuthProvider';
+import SearchBar from '../components/SearchBar';
 
 const MainPage = () => {
   const { tokenData, setTokenData } = useAuth();
@@ -32,23 +33,26 @@ const MainPage = () => {
     <div className='wrap'>
       <Categories />
       <div className='contents'>
+        <div id='head'>
+          <SearchBar authorization={tokenData?.access_token} />
+          <button className='btn dark'
+            onClick={() => {
+              const logoutWindow = window.open(
+                'https://accounts.spotify.com/logout',
+                '_blank',
+                'width=700,height=500',
+              );
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }}
+          >
+            로그아웃
+          </button>
+        </div>
         {tokenData && <Api category={category} />}
         {tokenData && <SpotifyPlayer />}
         {deviceId && <PlaybackControls />}
-        <button
-          onClick={() => {
-            const logoutWindow = window.open(
-              'https://accounts.spotify.com/logout',
-              '_blank',
-              'width=700,height=500',
-            );
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          }}
-        >
-          로그아웃 버튼
-        </button>
       </div>
     </div>
   );
