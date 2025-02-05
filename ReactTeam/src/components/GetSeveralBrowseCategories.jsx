@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+import { Link } from 'react-router-dom';
 
 const GetSeveralBrowseCategories = ({ authorization }) => {
   const endpoint = `https://api.spotify.com/v1/browse/categories`;
@@ -42,6 +43,7 @@ const GetSeveralBrowseCategories = ({ authorization }) => {
           <li key={category.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
             <img src={category.icons[0]?.url} alt={category.name} width="50" height="50" style={{ marginRight: '10px' }} />
             {category.name}
+            <Link to={category.href}>aasd</Link>
           </li>
         ))}
       </ul>
