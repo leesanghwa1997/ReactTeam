@@ -1,31 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { SearchContext } from '../contextAPI/SearchProvider';
 
 const SearchBar = ({ authorization }) => {
+    const { setSearchResults } = useContext(SearchContext);
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // API 요청 함수
     const requestSearch = async (searchQuery) => {
-        if (!searchQuery.trim()) return; // 빈 문자열 방지
+        if (!searchQuery.trim()) return;
         setLoading(true);
         setError(null);
 
         try {
             const response = await axios.get('https://api.spotify.com/v1/search', {
                 params: {
-                    q: encodeURIComponent(searchQuery), // URL 인코딩 추가
+                    q: encodeURIComponent(searchQuery),
                     type: 'album,playlist,track,artist',
                     market: 'KR',
                     limit: 10,
                 },
                 headers: {
-                    Authorization: `Bearer ${authorization}`, // Bearer 추가
+                    Authorization: `Bearer ${authorization}`,
                 },
             });
 
             console.log('검색 결과:', response.data);
+            setSearchResults(response.data); // 전역 상태에 저장
         } catch (err) {
             console.error('검색 오류:', err);
             setError(err);
@@ -34,13 +36,10 @@ const SearchBar = ({ authorization }) => {
         }
     };
 
-
-    // 검색어 변경 핸들러
     const handleSearch = (event) => {
         setQuery(event.target.value);
     };
 
-    // 검색 요청 핸들러
     const handleSubmit = (event) => {
         event.preventDefault();
         if (query.trim()) {
