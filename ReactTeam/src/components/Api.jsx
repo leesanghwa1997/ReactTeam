@@ -5,9 +5,12 @@ import { useAuth } from '../contextAPI/AuthProvider';
 import Main from './Main';
 
 const Api = ({ category }) => {
+  const { tokenData } = useAuth();
   const { access_token, token_type, expires_in, refresh_token, scope } =
-    useAuth().tokenData; // data 를 구조파괴 할당
+    tokenData; // data 를 구조파괴 할당
   const authorization = `${token_type} ${access_token}`;
+  console.log(tokenData);
+  console.log(localStorage.getItem('token'));
   // 이 authorization 을 컴포넌트마다 props로 전달
   switch (category) {
     case 'main':
