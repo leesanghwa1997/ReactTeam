@@ -37,8 +37,4 @@ const SongItem = ({ song, onPlayClick }) => {
     );
 };
 
-<<<<<<< HEAD
 export default SongItem;
-=======
-export default SongItem;
->>>>>>> e0e01a087dc09d18ee194646fa2832d5bee7308e
