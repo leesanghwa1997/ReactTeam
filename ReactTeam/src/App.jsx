@@ -3,6 +3,7 @@ import SpotifyLogin from './components/SpotifyLogin';
 import { Route, Routes } from 'react-router-dom';
 import Callback from './components/Callback';
 import MainPage from './pages/MainPage';
+import Search from './components/Search';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/:category" element={<MainPage />} />
       <Route path="/login" element={<SpotifyLogin />} />
       <Route path="/Callback" element={<Callback />} />
+      <Route path="/search" element={<Search />} />
     </Routes>
   );
 }

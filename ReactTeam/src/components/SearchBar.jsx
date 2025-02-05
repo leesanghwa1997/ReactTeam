@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import './SearchBar.css';
 import search from '../assets/images/search.svg';
+import { SearchContext } from '../contextAPI/SearchProvider';
 
 const SearchBar = ({ authorization }) => {
     const { setSearchResults } = useContext(SearchContext);
