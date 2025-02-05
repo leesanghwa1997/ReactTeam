@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, Navigate } from 'react-router-dom';
 import Categories from '../components/Categories';
 import Api from '../components/Api';
