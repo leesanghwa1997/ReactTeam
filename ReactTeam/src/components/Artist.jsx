@@ -39,21 +39,25 @@ const Artist = ({ authorization, id }) => {
   console.log("API 응답:", resolved.data);
 
   // Spotify API에서 제공하는 아티스트 정보
-  const artist = resolved.data;
+  const artists = resolved.data.artists;
 
   const items = resolved.data.items;
   console.log(items);
 
   return (
     <div className="p-4 bg-gray-800 rounded-lg text-white">
-      <h2 className="text-xl font-bold">{artist.name}</h2>
-      <img
-        src={artist.images?.[0]?.url || "https://via.placeholder.com/100"}
-        alt={artist.name}
-        className="rounded-full w-24 h-24"
-      />
+      {artists.map((artist) => (
+        <div key={artist.id}>
+          <h2 className="text-xl font-bold">{artist.name}</h2>
+          <img
+            src={artist.images?.[0]?.url || 'https://via.placeholder.com/100'}
+            alt={artist.name}
+            className="rounded-full w-24 h-24"
+          />
+        </div>
+      ))}
     </div>
-  )
+  );
 };
 
 export default Artist;
