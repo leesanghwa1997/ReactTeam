@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contextAPI/AuthProvider';
 
 const categories = [
   { name: 'main', text: '메인' },
@@ -12,11 +13,12 @@ const categories = [
   { name: 'ex6', text: '더미' },
 ];
 
-const Categories = ({ data }) => {
+const Categories = () => {
+  const { tokenData } = useAuth();
   return (
     <div>
       {categories.map((c) => (
-        <Link key={c.name} to={`/${c.name}`} state={{ data }}>
+        <Link key={c.name} to={`/${c.name}`} state={tokenData}>
           {c.text}
         </Link>
       ))}
