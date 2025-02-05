@@ -5,6 +5,7 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    console.log('Authorization Token:', authorization);  // 인증 토큰 확인
 
     useEffect(() => {
         const fetchAlbums = async () => {

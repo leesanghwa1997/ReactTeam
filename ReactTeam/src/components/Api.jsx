@@ -13,6 +13,8 @@ const Api = ({ category }) => {
   console.log(tokenData);
   console.log(localStorage.getItem('token'));
   // 이 authorization 을 컴포넌트마다 props로 전달
+  console.log('Authorization Token in Api:', authorization); // authorization 값 확인
+
   switch (category) {
     case 'main':
       return <Main authorization={authorization} />;
