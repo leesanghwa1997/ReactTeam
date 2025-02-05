@@ -166,7 +166,10 @@ button.round:hover {
 
 
 
-
+.contents {
+    flex: 1;
+    max-width: calc(100vw - 400px);
+}
 
 
 
