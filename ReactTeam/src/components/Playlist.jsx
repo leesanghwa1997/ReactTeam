@@ -10,7 +10,6 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
 
     useEffect(() => {
         if (!playlistId || !token) {
-            console.error("🚨 Missing playlistId or token");
             setLoading(false);
             return;
         }
@@ -18,12 +17,14 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
         const controller = new AbortController();
         const signal = controller.signal;
 
+        fetchPlaylist(playlistId, token, controller.signal)
+
         const fetchPlaylist = async (id, token, signal) => {
             setLoading(true);
             setError(null); // 이전 오류 상태 초기화
 
             try {
-                const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+                const response = await fetch(`https://api.spotify.com/v1/playlists/${Id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                     signal,
                 });
@@ -31,8 +32,6 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
                 if (!response.ok) throw new Error("❌ Failed to fetch playlist");
 
                 const data = await response.json();
-
-                return (data.tracks?.)
 
                 const tracks = (data.tracks?.items || [])
                     .map((item) => ({
