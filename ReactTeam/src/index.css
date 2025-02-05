@@ -1,73 +1,212 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
+/* 기본 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 기본 폰트 설정 */
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* 반응형 이미지 */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 링크 기본 스타일 */
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 
-a:hover {
-  color: #535bf2;
+/* 버튼 리셋 */
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
 }
+
+/* 리스트 스타일 제거 */
+ul,
+ol {
+    list-style: none;
+}
+
+/* 테이블 리셋 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 폼 요소 초기화 */
+input,
+textarea,
+select,
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+button.btn {
+    height: 40px;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 0 20px;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button.dark {
+    background: rgba(255 255 255 / 0.2);
+    color: #666;
+}
+
+button.dark:hover {
+    color: #fff;
+}
+
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #f5f5f5;
+    }
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+.wrap {
+    display: flex;
+    min-height: 100vh;
 }
 
-button:hover {
-  border-color: #646cff;
+.container {
+    padding: 0 70px;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+button.round {
+    background: #1ED760;
+    color: #000;
+    border-radius: 100px;
+    padding: 10px 25px;
+    transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+button.round:hover {
+    background: #34EA75;
 }
+
+/* sideMenu */
+#sideMenu {
+    position: sticky;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    padding: 0 40px;
+    border-right: 1px solid rgba(255 255 255 / 0.2);
+    overflow: auto;
+}
+
+#sideMenu .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0 10px;
+}
+
+#sideMenu .logo img {
+    opacity: 0.8;
+}
+
+#sideMenu .menu {
+    padding: 20px 0;
+}
+
+#sideMenu .menu:first-child {
+    border-bottom: 1px solid rgba(255 255 255 / 0.2);
+}
+
+#sideMenu .menu ul {}
+
+#sideMenu .menu ul li:not(:last-child) {
+    margin: 0 0 10px;
+}
+
+#sideMenu .menu ul li a {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 15px;
+}
+
+#sideMenu .menu ul li a .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+}
+
+#sideMenu .menu ul li a .txt {}
+
+#sideMenu .menu ul li a.active,
+#sideMenu .menu ul li:hover a {
+    background: rgba(255 255 255 / 0.1);
+    /* background: #222; */
+    transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#sideMenu .menu.profile ul li a .icon img {
+    width: 40px;
+}
+
+/* head */
+#head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 50px;
+}
+
+
+
+
+
+/* contents */
+.contents {
+    flex: 1;
+    max-width: calc(100vw - 400px);
+    padding: 40px;
+}
+
+
+
+
+
+
+#sideMenu {}
