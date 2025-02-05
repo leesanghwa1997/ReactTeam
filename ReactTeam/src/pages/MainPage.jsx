@@ -14,9 +14,11 @@ const MainPage = () => {
 
   // 일단 categories 컴포넌트와 api 호출용 컴포넌트 부름
   return (
-    <div>
+    <div className='wrap'>
       <Categories data={data} />
-      <Api category={category} data={data} />
+      <div className='contents'>
+        <Api category={category} data={data} />
+      </div>
     </div>
   );
 };

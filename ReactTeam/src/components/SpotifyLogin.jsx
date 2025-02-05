@@ -59,7 +59,7 @@ const SpotifyLogin = () => {
   // listener
   return (
     <>
-      <div id='intro' className='wrap'>
+      <div id='intro'>
         <div id='introHeader'>
           <div className='container'>
             <Link to="/" className='intro'><img src={logo} className="logo" alt="Spotify Logo" /></Link>
