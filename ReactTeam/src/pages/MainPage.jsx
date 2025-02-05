@@ -30,26 +30,27 @@ const MainPage = () => {
 
   // 일단 categories 컴포넌트와 api 호출용 컴포넌트 부름
   return (
-    <div>
-      <SearchBar authorization={tokenData?.access_token} />
+    <div className='wrap'>
       <Categories />
-      {tokenData && <Api category={category} />}
-      {tokenData && <SpotifyPlayer />}
-      {deviceId && <PlaybackControls />}
-      <button
-        onClick={() => {
-          const logoutWindow = window.open(
-            'https://accounts.spotify.com/logout',
-            '_blank',
-            'width=700,height=500',
-          );
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        }}
-      >
-        로그아웃 버튼
-      </button>
+      <div className='contents'>
+        {tokenData && <Api category={category} />}
+        {tokenData && <SpotifyPlayer />}
+        {deviceId && <PlaybackControls />}
+        <button
+          onClick={() => {
+            const logoutWindow = window.open(
+              'https://accounts.spotify.com/logout',
+              '_blank',
+              'width=700,height=500',
+            );
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }}
+        >
+          로그아웃 버튼
+        </button>
+      </div>
     </div>
   );
 };
