@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 
 const SongItem = ({ song, onPlayClick }) => {
@@ -33,28 +32,9 @@ const SongItem = ({ song, onPlayClick }) => {
                 <button onClick={() => onPlayClick(song.uri)} className="text-xl text-green-500 hover:text-green-600">
                     <i className="fa fa-play"></i>
                 </button>
-=======
-import React from "react";
-
-const SongItem = ({ song }) => {
-    return (
-        <div className="flex items-center p-2 border-b border-gray-700">
-            <img
-                src={song.cover || "https://via.placeholder.com/50"}
-                alt={song.title || "Unknown Song"}
-                className="w-12 h-12 rounded-lg mr-4"
-            />
-            <div>
-                <p className="text-sm font-semibold">{song.title || "Unknown Title"}</p>
-                <p className="text-xs text-gray-400">{song.artist || "Unknown Artist"}</p>
->>>>>>> e0e01a087dc09d18ee194646fa2832d5bee7308e
             </div>
         </div>
     );
 };
 
-<<<<<<< HEAD
 export default SongItem;
-=======
-export default SongItem;
->>>>>>> e0e01a087dc09d18ee194646fa2832d5bee7308e
