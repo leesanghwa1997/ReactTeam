@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
-import { tokenData } from '../contextAPI/AuthProvider';
+import { useAuth } from '../contextAPI/AuthProvider';
 
 const SpotifyPlayer = () => {
   const [player, setPlayer] = useState(null);
   const { deviceId, setDeviceId, playbackUri } = usePlayback();
-  const token = tokenData.access_token;
+  const token = useAuth().tokenData.access_token;
 
   useEffect(() => {
     const script = document.createElement('script');
