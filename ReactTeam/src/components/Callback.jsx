@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import SpotifyUserProfile from './SpotifyUserProfile';
 import { useSearchParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contextAPI/AuthProvider';
@@ -8,7 +7,7 @@ const Callback = () => {
   const [data, setData] = useState(null);
   const [queryString] = useSearchParams(); // login 에서 넘어올 때 쿼리스트링으로 넘어온 데이터를 받음
   const code = queryString.get('code'); // 쿼리스트링에서 코드 꺼냄 -> req body
-  const { clientId, clientSecret } = useAuth();
+  const { clientId, clientSecret } = useAuth().authData;
   const client_id_secret = `${clientId}:${clientSecret}`; // 클라이언트 ID:secret api 요청에 따라 base64 로 인코딩 필요
   const authEndpoint = 'https://accounts.spotify.com/api/token'; // req 주소
   const redirect_uri = 'http://localhost:5173/Callback'; // req body
