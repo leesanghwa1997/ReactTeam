@@ -1,47 +1,57 @@
 import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-// pr 연습용
-// 여러개를 가져올땐 id는 , 로 연결되어야함
-const Albums = ({ authorization, id }) => {
-  const endpoint = 'https://api.spotify.com/v1/albums'; // 요청할 api 선정
 
-  const request = () => {
-    axios.get(
-      endpoint,
-      // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
-      {
-        params: {
-          id: id,
-          market: 'KR',
-        },
-        headers: {
-          Authorization: authorization,
-        },
+const Albums = ({ authorization, albumIds }) => {
+  const endpoint = 'https://api.spotify.com/v1/albums'; // 요청할 API 선정
+
+  const request = () =>
+    axios.get(endpoint, {
+      params: {
+        id: albumIds, // 여러 앨범 ID를 콤마로 연결하여 전달
+        market: 'KR',
       },
-    );
-  };
-  // 강의시간에 썼던 api 요청 결과 가져오기
-  const [loading, resolved, error] = usePromise(request, []);
+      headers: {
+        Authorization: authorization,
+      },
+    });
 
-  // 에러
+  const [loading, resolved, error] = usePromise(request, []); // API 요청 후 상태 관리
+
+  // 에러 처리
   if (error) {
     return <p>에러 발생: {error}</p>;
   }
 
-  // 아직 답이 안돌아왔으면 표시
+  // 로딩 중 표시
   if (loading) {
     return <p>로딩중...</p>;
   }
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
+  // 응답이 없으면 null 반환
   if (!resolved) {
     return null;
   }
-  const items = resolved.data.items;
-  console.log(items);
 
-  return <div></div>;
+  const albums = resolved.data.albums; // 앨범 정보 저장
+
+  return (
+    <div>
+      {albums.map((album) => (
+        <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
+          <img
+            src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+            alt={album.name}
+            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+          />
+          <div>
+            <strong>{album.name}</strong>
+          </div>
+          <div>아티스트: {album.artists.map((artist) => artist.name).join(', ')}</div>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default Albums;

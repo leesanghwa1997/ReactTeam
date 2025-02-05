@@ -30,7 +30,7 @@ const SearchBar = ({ authorization }) => {
                 },
             });
 
-            console.log('검색 결과:', response.data);
+            // console.log('검색 결과:', response.data);
             setSearchResults(response.data); // 전역 상태에 저장
         } catch (err) {
             console.error('검색 오류:', err);
