@@ -3,12 +3,14 @@ import axios from 'axios';
 import './SearchBar.css';
 import search from '../assets/images/search.svg';
 import { SearchContext } from '../contextAPI/SearchProvider';
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = ({ authorization }) => {
     const { setSearchResults } = useContext(SearchContext);
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const requestSearch = async (searchQuery) => {
         if (!searchQuery.trim()) return;
@@ -45,7 +47,9 @@ const SearchBar = ({ authorization }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (query.trim()) {
-            requestSearch(query);
+            requestSearch(query).then(
+                () => navigate(`/search?q=${query}`)
+            );
         }
     };
 

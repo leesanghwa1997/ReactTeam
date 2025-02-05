@@ -12,7 +12,6 @@ function App() {
       <Route path="/:category" element={<MainPage />} />
       <Route path="/login" element={<SpotifyLogin />} />
       <Route path="/Callback" element={<Callback />} />
-      <Route path="/search" element={<Search />} />
     </Routes>
   );
 }
