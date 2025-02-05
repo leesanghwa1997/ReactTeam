@@ -5,16 +5,18 @@ import Api from '../components/Api';
 import SpotifyPlayer from '../components/SpotifyPlayer';
 import PlaybackControls from '../components/PlaybackControls';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
-import { tokenData, setTokenData } from '../contextAPI/AuthProvider';
+import { useAuth } from '../contextAPI/AuthProvider';
 
 const MainPage = () => {
+  const { tokenData, setTokenData } = useAuth();
   const location = useLocation(); // 넘겨준 state 를 받기 위해
   const data = location.state?.data; // 넘어온 state가 있으면 state.data를 할당, 여기 시점의 data(state.data) 는 token 을 포함한 api 의 응답 의 data 객체
   useEffect(() => {
-    if (data && !tokenData) {
+    if (data) {
+      console.log('토큰컨텍스트에 완료');
       setTokenData(data);
     }
-  }, [data, tokenData]);
+  }, [data, setTokenData]);
   const category = useParams().category || 'main'; // url parameter 받기
   // data 즉 token 이 없으면 login 으로 리다이렉트
   const { deviceId } = usePlayback();
@@ -27,7 +29,7 @@ const MainPage = () => {
     <div>
       <Categories />
       <Api category={category} />
-      <SpotifyPlayer />
+      {tokenData && <SpotifyPlayer />}
       {deviceId && <PlaybackControls />}
     </div>
   );

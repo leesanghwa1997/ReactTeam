@@ -1,11 +1,11 @@
 import React from 'react';
 import SpotifyUserProfile from './SpotifyUserProfile';
 import MyPlaylist from './MyPlaylist';
-import { tokenData } from '../contextAPI/AuthProvider';
+import { useAuth } from '../contextAPI/AuthProvider';
 
 const Api = ({ category }) => {
   const { access_token, token_type, expires_in, refresh_token, scope } =
-    tokenData; // data 를 구조파괴 할당
+    useAuth().authData; // data 를 구조파괴 할당
   const authorization = `${token_type} ${access_token}`;
   // 이 authorization 을 컴포넌트마다 props로 전달
   switch (category) {
