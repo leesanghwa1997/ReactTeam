@@ -1,6 +1,13 @@
-import React from 'react';
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+
 
 const NewReleases = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/browse/new-releases';
@@ -35,23 +42,34 @@ const NewReleases = ({ authorization }) => {
 
   return (
     <div>
-      <h2>최신 발매 앨범</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+      {/* <h1>최신 발매 앨범</h1> */}
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        freeMode={true}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[FreeMode, Pagination]}
+        className="swiper"
+      >
         {albums.map((album) => (
-          <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-            {/* 앨범 이미지 (없으면 기본 이미지) */}
-            <img
-              src={album.images[0]?.url || 'https://via.placeholder.com/150'}
-              alt={album.name}
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-            />
-            <div>
-              <strong>{album.name}</strong>
+          <SwiperSlide key={album.id}>
+            <div className="card">
+              <div className="thumb">
+                <img
+                  src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+                  alt={album.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{album.name}</div>
+                <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
+              </div>
             </div>
-            <div>아티스트: {album.artists.map((artist) => artist.name).join(', ')}</div>
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };
