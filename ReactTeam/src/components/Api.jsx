@@ -2,6 +2,7 @@ import React from 'react';
 import SpotifyUserProfile from './SpotifyUserProfile';
 import MyPlaylist from './MyPlaylist';
 import { useAuth } from '../contextAPI/AuthProvider';
+import Main from './Main';
 
 const Api = ({ category }) => {
   const { access_token, token_type, expires_in, refresh_token, scope } =
