@@ -15,7 +15,8 @@ import process_api_recomend03 from '../assets/images/process_api_recomend03.png'
 const REDIRECT_URI = 'http://localhost:5173/Callback'; // response 를 가지고 여기로 감
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'; // api 요청 주소
 const RESPONSE_TYPE = 'code'; // 코드로 받겠음
-const SCOPE = 'user-read-private user-read-email streaming'; // 내 개인정보를 어디까지 볼 수 있는지
+const SCOPE =
+  'user-read-private user-read-email streaming user-read-playback-state'; // 내 개인정보를 어디까지 볼 수 있는지
 
 const SpotifyLogin = () => {
   const { clientId } = useAuth().authData; // 클라이언트 ID
@@ -23,9 +24,7 @@ const SpotifyLogin = () => {
   const handleLogin = () => {
     window.location.href = `${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI,
-    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(
-      SCOPE,
-    )}&show_dialog=true`;
+    )}&response_type=${RESPONSE_TYPE}&scope=${encodeURIComponent(SCOPE)}`;
   };
 
   // 기본 선택된 항목들
