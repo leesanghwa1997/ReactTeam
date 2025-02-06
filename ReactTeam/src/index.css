@@ -204,6 +204,59 @@ button.round:hover {
     padding: 40px;
 }
 
+.list {}
+
+.list h1 {
+    margin: 0 0 20px;
+}
+
+.swiper {}
+
+.swiper .swiper-wrapper {}
+
+.swiper .swiper-slide {}
+
+.swiper .swiper-slide .card {}
+
+.swiper .swiper-slide .card .thumb {}
+
+.swiper .swiper-slide .card .thumb img {
+    width: 100%;
+}
+
+.swiper .swiper-slide .card .text {
+    margin: 10px 0 0;
+}
+
+.swiper .swiper-slide .card .text .tit {
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.swiper .swiper-slide .card .text .txt {
+    font-size: 12px;
+    color: #aaa;
+    margin: 5px 0 0;
+}
+
+.swiper .swiper-pagination {
+    position: relative;
+    margin: 20px 0 0;
+}
+
+.swiper .swiper-pagination .swiper-pagination-bullet {
+    background: rgba(255 255 255 / 0.8);
+}
+
+.swiper .swiper-pagination .swiper-pagination-bullet-active {
+    background: #1ED760;
+}
+
+
+
 
 
 
