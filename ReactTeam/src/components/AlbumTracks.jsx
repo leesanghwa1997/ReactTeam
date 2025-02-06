@@ -16,7 +16,7 @@ const AlbumTracks = ({ authorization, id }) => {
           offset: 5,
         },
         headers: {
-          Authorization: authorization,
+          Authorization: `Bearer ${authorization}`,
         },
       },
     );

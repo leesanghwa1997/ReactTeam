@@ -10,7 +10,7 @@ export const PlaybackProvider = ({ children }) => {
 
   return (
     <PlaybackContext.Provider
-      value={{ playbackUri, setPlaybackUri, deviceId, setDeviceId }}
+      value={{ playbackUri, setPlaybackUri, deviceId, setDeviceId, playUri }}
     >
       {children}
     </PlaybackContext.Provider>
