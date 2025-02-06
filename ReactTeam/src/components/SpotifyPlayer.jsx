@@ -42,7 +42,11 @@ const SpotifyPlayer = () => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ context_uri: playbackUri }), // 트랙/앨범/플레이리스트 재생
+      body: JSON.stringify(
+        playbackUri.startsWith('spotify:track:')
+          ? { uris: [playbackUri] }
+          : { context_uri: playbackUri },
+      ), // 트랙/앨범/플레이리스트 재생
     });
   }, [playbackUri, deviceId, token]);
 
