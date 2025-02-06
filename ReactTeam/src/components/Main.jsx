@@ -5,6 +5,7 @@ import MyPlaylist from '../components/MyPlaylist';
 import FeaturedPlaylists from '../components/FeaturedPlaylists';
 import NewReleases from '../components/NewReleases'; // 추가
 import { usePlayback } from '../contextAPI/PlaybackProvider';
+import Playlist from './Playlist';
 
 const Main = ({ authorization }) => {
     return (
@@ -13,6 +14,8 @@ const Main = ({ authorization }) => {
             <NewReleases authorization={authorization} />
             <h1>내 플레이 리스트</h1>
             <MyPlaylist authorization={authorization} />
+            <h1>플레이 리스트</h1>
+            <Playlist authorization={authorization} />
         </div>
     );
 };

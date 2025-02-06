@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../contextAPI/SearchProvider";
 import SongTracks from "./SongTracks";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-const Playlist = ({ token, playlistId, onPlayClick }) => {
+const Playlist = ({ token, playlistId }) => {
     const [songs, setSongs] = useState([]);
     const [playlistInfo, setPlaylistInfo] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { setSelectedAlbum } = useContext(SearchContext);
 
-    // 재생 시간(ms)을 분:초 형식으로 변환
     const formatDuration = (duration) => {
         if (!Number.isFinite(duration) || duration < 0) return "00:00";
         const minutes = Math.floor(duration / 60000);
@@ -31,26 +37,27 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
                 if (!playlistResponse.ok) throw new Error("Failed to fetch playlist");
 
                 const playlistData = await playlistResponse.json();
-                setPlaylistInfo({
+                const formattedPlaylist = {
+                    id: playlistData.id,
                     name: playlistData.name,
                     description: playlistData.description,
-                    image: playlistData.images[0]?.url,
+                    image: playlistData.images[0]?.url || "https://via.placeholder.com/150",
                     owner: playlistData.owner.display_name,
                     createdAt: new Date(playlistData.created_at).toLocaleDateString(),
-                });
-
-                setSongs(
-                    playlistData.tracks.items.map((item) => ({
+                    tracks: playlistData.tracks.items.map((item) => ({
                         id: item.track.id,
                         title: item.track.name,
                         artist: item.track.artists.map((a) => a.name).join(", "),
                         album: item.track.album.name,
-                        cover: item.track.album.images[0]?.url,
+                        cover: item.track.album.images[0]?.url || "https://via.placeholder.com/150",
                         uri: item.track.uri,
                         addedAt: new Date(item.added_at).toLocaleDateString(),
                         duration: formatDuration(item.track.duration_ms),
-                    }))
-                );
+                    })),
+                };
+
+                setPlaylistInfo(formattedPlaylist);
+                setSongs(formattedPlaylist.tracks);
             } catch (error) {
                 setError("Failed to load playlist");
             } finally {
@@ -62,7 +69,8 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
     }, [playlistId, token]);
 
     const handlePlayClick = () => {
-        navigate(`/playlist/${playlistId}`);
+        setSelectedAlbum(playlistInfo);
+        navigate("/album");
     };
 
     return (
@@ -97,15 +105,33 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
             ) : songs.length === 0 ? (
                 <p className="text-gray-400">플레이리스트에 트랙이 없습니다.</p>
             ) : (
-                <div className="divide-y divide-gray-700">
-                    <SongTracks
-                        authorization={`Bearer ${token}`} // 토큰 전달
-                        ids={songs.map((song) => song.id).join(",")} // 트랙 ID를 콤마로 구분하여 전달
-                    />
-                </div>
+                <Swiper
+                    slidesPerView={4}
+                    spaceBetween={30}
+                    freeMode={true}
+                    pagination={{ clickable: true }}
+                    modules={[FreeMode, Pagination]}
+                    className="swiper"
+                >
+                    {songs.map((song) => (
+                        <SwiperSlide key={song.id}>
+                            <div className="card">
+                                <Link to="" className="thumb">
+                                    <img src={song.cover} alt={song.title} />
+                                </Link>
+                                <div className="text">
+                                    <Link to="" className="tit">{song.title}</Link>
+                                    <p className="txt">{song.artist}</p>
+                                    <p className="txt">{song.duration}</p>
+                                </div>
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             )}
         </div>
     );
 };
 
 export default Playlist;
+

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contextAPI/AuthProvider";
 import { usePlayback } from "../contextAPI/PlaybackProvider";
 import Playlist from "./Playlist";
-import MyPlaylist from "./MyPlaylist";
 
 const PlaylistMain = () => {
     const { access_token } = useAuth().tokenData;
@@ -31,26 +30,17 @@ const PlaylistMain = () => {
         <div className="w-full max-w-6xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
             {loading ? (
                 <p>로딩 중...</p>
-            ) : selectedPlaylistId ? (
+            ) : (
                 <>
                     <button
                         className="mb-4 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-full transition duration-200"
                         onClick={() => setSelectedPlaylistId(null)}
                     >
-                        <i className="fas fa-arrow-left mr-2"></i>🔙 뒤로가기
                     </button>
                     <Playlist
                         playlistId={selectedPlaylistId}
                         token={access_token}
                         onPlayClick={handlePlayClick}
-                    />
-                </>
-            ) : (
-                <>
-                    <h1 className="text-2xl font-bold text-center mb-6">🎵 플레이리스트</h1>
-                    <MyPlaylist
-                        access_token={access_token}
-                        onSelectPlaylist={setSelectedPlaylistId}
                     />
                 </>
             )}
