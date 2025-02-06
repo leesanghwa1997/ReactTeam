@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,7 @@ const NewReleases = ({ authorization }) => {
         limit: 10,
       },
       headers: {
-        Authorization: authorization,
+        Authorization: authorization
       },
     });
 
@@ -65,14 +66,13 @@ const NewReleases = ({ authorization }) => {
             <div
               className="card"
               onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
-              style={{ cursor: "pointer" }}
             >
-              <div className="thumb">
+              <Link to="" className="thumb">
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}
                 />
-              </div>
+              </Link>
               <div className="text">
                 <div className="tit">{album.name}</div>
                 <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
