@@ -26,6 +26,11 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                 console.log("🎵 가져온 트랙 데이터:", response.data.tracks);
                 setTracks(response.data.tracks);
                 setLoading(false);
+
+                // 각 트랙의 이미지 URL을 콘솔에 출력
+                // response.data.tracks.forEach((track) => {
+                //     console.log(`트랙 이름: ${track.name} | 앨범 이미지 URL: ${track.album.images[0]?.url}`);
+                // });
             } catch (err) {
                 setError(err);
                 setLoading(false);

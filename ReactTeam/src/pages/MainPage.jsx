@@ -12,7 +12,7 @@ import LogoutButton from '../components/LogoutButton';
 const MainPage = () => {
   const { tokenData, setTokenData } = useAuth();
   const category = useParams().category || 'main'; // url parameter 받기
-  const { deviceId } = usePlayback();
+  const { playbackUri, deviceId } = usePlayback();
   if (!tokenData) {
     return <Navigate to="/login" replace={true} />;
   }
@@ -26,8 +26,7 @@ const MainPage = () => {
           <SearchBar authorization={tokenData?.access_token} />
         </div>
         {tokenData && <Api category={category} />}
-        {tokenData && <SpotifyPlayer />}
-        {deviceId && <PlaybackControls />}
+        {playbackUri && <SpotifyPlayer />}
         <LogoutButton />
       </div>
     </div>
