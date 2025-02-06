@@ -66,9 +66,8 @@ const NewReleases = ({ authorization }) => {
             <div
               className="card"
               onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
-              style={{ cursor: "pointer" }}
             >
-              <div className="thumb">
+              <Link to="" className="thumb">
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}

@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import dots from '../assets/images/dots_three_vertical.svg';
+import { NavLink, Link } from 'react-router-dom';
+
 import { usePlayback } from "../contextAPI/PlaybackProvider"; // usePlayback 훅 추가
 
 const GetSeveralTracks = ({ authorization, ids }) => {
@@ -7,6 +10,7 @@ const GetSeveralTracks = ({ authorization, ids }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { playUri } = usePlayback(); // 트랙 재생 함수
+    const [activeOptions, setActiveOptions] = useState({}); // 개별 트랙 상태 관리
 
     useEffect(() => {
         const fetchTracks = async () => {
