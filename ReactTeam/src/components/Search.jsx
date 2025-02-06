@@ -11,10 +11,11 @@ const Search = ({ authorization }) => {
     const query = new URLSearchParams(location.search).get("q"); // 검색어 가져오기
     const [albumIds, setAlbumIds] = useState(''); // 앨범 ID 상태
     const { playUri } = usePlayback(); // 트랙 재생 함수
-    console.log('Authorization Token:', authorization);  // 인증 토큰 확인
+    console.log('Authorization Token Search:', authorization);  // 인증 토큰 확인
 
 
     useEffect(() => {
+        console.log("🔍 검색 결과 전체:", searchResults); // 전체 검색 결과 출력
         // 검색 결과가 있으면, 해당 트랙들의 앨범 ID들을 콤마로 구분하여 설정
         if (searchResults && searchResults.tracks) {
             const ids = searchResults.tracks.items.map((track) => track.album.id).join(',');
