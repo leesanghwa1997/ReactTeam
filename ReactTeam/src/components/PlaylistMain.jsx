@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import MyPlaylist from "./MyPlaylist";
-import Playlist from "./Playlist";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contextAPI/AuthProvider";
 import { usePlayback } from "../contextAPI/PlaybackProvider";
+import Playlist from "./Playlist";
+import MyPlaylist from "./MyPlaylist";
 
 const PlaylistMain = () => {
     const { access_token } = useAuth().tokenData;
@@ -10,7 +10,6 @@ const PlaylistMain = () => {
     const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 플레이리스트가 로드되었는지 확인
     useEffect(() => {
         if (!access_token) {
             alert("로그인 정보가 필요합니다.");
