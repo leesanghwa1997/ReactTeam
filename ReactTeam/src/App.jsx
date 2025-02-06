@@ -13,7 +13,8 @@ function App() {
       <Route path="/:category" element={<MainPage />} />
       <Route path="/login" element={<SpotifyLogin />} />
       <Route path="/Callback" element={<Callback />} />
-      <Route path="/Playlist/:PlaylistId" element={<Playlist />} />
+      {/* Playlist 페이지 추가: playlistId를 URL 파라미터로 받음 */}
+      <Route path="/playlist/:playlistId" element={<Playlist />} />
     </Routes>
   );
 }
