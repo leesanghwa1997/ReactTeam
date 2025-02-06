@@ -6,7 +6,7 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log("Authorization Token 트랙:", authorization); // 인증 토큰 확인
+    // console.log("Authorization Token 트랙:", authorization); // 인증 토큰 확인
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -40,6 +40,7 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
 
     return (
         <ul>
+            <h2>트랙</h2>
             {tracks.map((track) => (
                 <li
                     key={track.id}
