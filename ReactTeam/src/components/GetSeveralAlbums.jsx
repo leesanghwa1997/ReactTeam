@@ -1,4 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../contextAPI/SearchProvider';
@@ -38,30 +45,36 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
 
     return (
         <div>
-            <h2>앨범</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+            {/* <h2>앨범</h2> */}
+            <Swiper
+                slidesPerView={4}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                    clickable: true,
+                }}
+                modules={[FreeMode, Pagination]}
+                className="swiper"
+            >
                 {albums.map((album) => (
-                    <div
-                        key={album.id}
-                        onClick={() => handleAlbumClick(album)}
-                        style={{
-                            border: '1px solid #ddd',
-                            padding: '10px',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <img
-                            src={album.images[0]?.url || 'https://via.placeholder.com/150'}
-                            alt={album.name}
-                            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-                        />
-                        <div><strong>{album.name}</strong></div>
-                        <div>발매일: {album.release_date}</div>
-                        <div>트랙 수: {album.total_tracks}</div>
-                    </div>
+                    <SwiperSlide key={album.id}>
+                        <div className='card'>
+                            <div className='thumb' onClick={() => handleAlbumClick(album)}>
+                                <img
+                                    src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+                                    alt={album.name}
+                                />
+                            </div>
+                            <div className="text">
+                                <div className="tit">{album.name}</div>
+                                <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
+                                <div className="txt">{album.total_tracks} Track</div>
+                                <div className="txt">{album.release_date}</div>
+                            </div>
+                        </div>
+                    </SwiperSlide>
                 ))}
-            </div>
+            </Swiper>
         </div>
     );
 };
