@@ -67,15 +67,22 @@ const NewReleases = ({ authorization }) => {
               className="card"
               onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
             >
-              <Link to="" className="thumb">
+              <div className="thumb">
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}
                 />
-              </Link>
+              </div>
               <div className="text">
                 <div className="tit">{album.name}</div>
-                <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
+                <div className="txt">
+                  {album.artists.map((artist, index) => (
+                    <Link to="" key={artist.id}>
+                      {artist.name}
+                      {index < album.artists.length - 1 && ", "}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </SwiperSlide>

@@ -101,7 +101,6 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                         <span>
                             {track.artists.map((artist, index) => (
                                 <Link to="" key={artist.id}>
-                                    {/* <Link to={`/artist/${artist.id}`}>{artist.name}</Link> */}
                                     {artist.name}
                                     {index < track.artists.length - 1 && ", "}
                                 </Link>
