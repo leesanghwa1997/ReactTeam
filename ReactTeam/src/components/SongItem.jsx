@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const SongItem = ({ song, onPlayClick }) => {
+const SongItem = ({ song, onPlayClick, index }) => {
     const [liked, setLiked] = useState(false);
 
     useEffect(() => {
@@ -10,20 +10,33 @@ const SongItem = ({ song, onPlayClick }) => {
 
     const toggleLike = () => {
         const likedSongs = new Set(JSON.parse(localStorage.getItem("likedSongs")) || []);
-        liked ? likedSongs.delete(song.id) : likedSongs.add(song.id);
+
+        if (liked) {
+            likedSongs.delete(song.id);
+        } else {
+            likedSongs.add(song.id);
+        }
+
         localStorage.setItem("likedSongs", JSON.stringify([...likedSongs]));
         setLiked(!liked);
     };
 
     return (
-        <div className="flex items-center p-4 border-b border-gray-700 hover:bg-gray-800 rounded-lg">
-            <img src={song.cover || "https://via.placeholder.com/50"} alt={`${song.title} cover`} className="w-16 h-16 rounded-lg mr-4" />
+        <div className="flex items-center p-4 hover:bg-gray-800 rounded-lg transition duration-200">
+            {/* 인덱스 번호 */}
+            <p className="text-gray-400 w-6 text-center">{index}</p>
+
+            {/* 앨범 커버 */}
+            <img
+                src={song.cover || "https://via.placeholder.com/50"}
+                alt={`${song.title} cover`}
+                className="w-14 h-14 rounded-md mr-4"
+            />
+
+            {/* 노래 정보 */}
             <div className="flex-grow">
                 <p className="text-lg font-semibold text-white">{song.title}</p>
-                <p className="text-sm text-gray-400">{song.artist}</p>
-                <p className="text-sm text-gray-500">{song.album}</p>
-                <p className="text-xs text-gray-400">추가일: {song.addedAt}</p>
-                <p className="text-xs text-gray-400">재생 시간: {song.duration}</p>
+                <p className="text-sm text-gray-400">{song.artist} • {song.album}</p>
             </div>
             <div className="flex items-center space-x-4">
                 <button onClick={toggleLike} className={`text-xl ${liked ? "text-pink-500" : "text-gray-400"} hover:text-pink-500`}>
