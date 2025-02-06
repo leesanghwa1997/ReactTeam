@@ -5,6 +5,7 @@ import { useAuth } from '../contextAPI/AuthProvider';
 import Main from './Main';
 import Search from './Search';
 import Album from './Album';
+import ArtistPage from './ArtistPage';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -27,8 +28,8 @@ const Api = ({ category }) => {
       return <Search authorization={authorization} />;
     case 'album':
       return <Album authorization={authorization} />;
-    case 'ex3':
-      break;
+    case 'artist':
+      return <ArtistPage authorization={authorization} />;
     case 'ex4':
       break;
     case 'ex5':
