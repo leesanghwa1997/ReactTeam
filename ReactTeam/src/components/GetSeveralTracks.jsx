@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { usePlayback } from "../contextAPI/PlaybackProvider"; // usePlayback 훅 추가
 
-const GetSeveralTracks = ({ authorization, ids, playUri }) => {
+const GetSeveralTracks = ({ authorization, ids }) => {
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // console.log("Authorization Token 트랙:", authorization); // 인증 토큰 확인
+    const { playUri } = usePlayback(); // 트랙 재생 함수
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -45,7 +45,7 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
                 <li
                     key={track.id}
                     onClick={() => {
-                        playUri(track.uri);
+                        playUri(track.uri); // 트랙 클릭 시 재생
                         console.log("🎵 트랙 재생:", track.uri);
                     }}
                     style={{ display: "flex", alignItems: "center", cursor: "pointer", marginBottom: "10px" }}
@@ -62,7 +62,6 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
             ))}
         </ul>
     );
-
 };
 
 export default GetSeveralTracks;
