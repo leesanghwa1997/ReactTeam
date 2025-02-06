@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { NavLink, Link } from 'react-router-dom';
 import axios from "axios";
 
 const GetSeveralArtists = ({ authorization, ids, playUri }) => {
@@ -36,23 +43,34 @@ const GetSeveralArtists = ({ authorization, ids, playUri }) => {
     if (loading) return <p>로딩중...</p>;
 
     return (
-        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", justifyContent: "center" }}>
-            <h2>아티스트</h2>
-            {artists.map((artist) => (
-                <div key={artist.id} style={{ textAlign: "center" }}>
-                    <img
-                        src={artist.images[0]?.url}
-                        alt={artist.name}
-                        style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "50%", // 둥글게 처리
-                            objectFit: "cover",
-                        }}
-                    />
-                    <p style={{ marginTop: "8px", fontWeight: "bold" }}>{artist.name}</p>
-                </div>
-            ))}
+        <div className="artists">
+            {/* <h2>아티스트</h2> */}
+            <Swiper
+                slidesPerView={7}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                    clickable: true,
+                }}
+                modules={[FreeMode, Pagination]}
+                className="swiper artists-swiper"
+            >
+                {artists.map((artist) => (
+                    <SwiperSlide key={artist.id}>
+                        <div className="card">
+                            <Link to="" className="thumb">
+                                <img
+                                    src={artist.images[0]?.url}
+                                    alt={artist.name}
+                                />
+                            </Link>
+                            <div className="text">
+                                <div className="tit">{artist.name}</div>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </div>
     );
 

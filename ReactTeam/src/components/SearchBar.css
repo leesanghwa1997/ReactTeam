@@ -15,6 +15,7 @@
 
 #search form input {
   flex: 1;
+  font-weight: 600;
 }
 
 #search form button {

@@ -68,7 +68,6 @@ const NewReleases = ({ authorization }) => {
                 <div className="tit">{album.name}</div>
                 <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
               </div>
-
             </div>
           </SwiperSlide>
         ))}

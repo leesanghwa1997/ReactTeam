@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const GetSeveralAlbums = ({ authorization, ids }) => {
@@ -44,24 +51,36 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
     // 앨범 목록 렌더링
     return (
         <div>
-            <h2>앨범</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+            {/* <h2>앨범</h2> */}
+            <Swiper
+                slidesPerView={4}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                    clickable: true,
+                }}
+                modules={[FreeMode, Pagination]}
+                className="swiper"
+            >
                 {albums.map((album) => (
-                    <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-                        {/* 앨범 이미지 (없으면 기본 이미지) */}
-                        <img
-                            src={album.images[0]?.url || 'https://via.placeholder.com/150'}
-                            alt={album.name}
-                            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-                        />
-                        <div>
-                            <strong>{album.name}</strong>
+                    <SwiperSlide key={album.id}>
+                        <div className="card">
+                            <Link to={`/albums/${album.id}`} className="thumb">
+                                <img
+                                    src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+                                    alt={album.name}
+                                />
+                            </Link>
+                            <div className="text">
+                                <div className="tit">{album.name}</div>
+                                <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
+                                <div className="txt">{album.total_tracks} Track</div>
+                                <div className="txt">{album.release_date}</div>
+                            </div>
                         </div>
-                        <div>발매일: {album.release_date}</div>
-                        <div>트랙 수: {album.total_tracks}</div>
-                    </div>
+                    </SwiperSlide>
                 ))}
-            </div>
+            </Swiper>
         </div>
     );
 };

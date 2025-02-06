@@ -45,19 +45,21 @@ const Search = ({ authorization }) => {
     }, [searchResults]);
 
     return (
-        <div>
-            <h2>🔍 검색 결과</h2>
-            <p>검색어: {query}</p>
-
+        <div className="list">
+            {/* <h2>🔍 검색 결과</h2>
+            <p>검색어: {query}</p> */}
+            <h1>아티스트</h1>
             {/* 아티스트 정보 가져와서 렌더링 */}
             {artistIds && <GetSeveralArtists authorization={authorization} ids={artistIds} />}
 
             {/* 트랙 정보 가져와서 렌더링 */}
             {trackIds && <GetSeveralTracks authorization={authorization} ids={trackIds} playUri={playUri} />}
 
+            <h1>앨범</h1>
             {/* 앨범 정보 가져와서 렌더링 */}
             {albumIds && <GetSeveralAlbums authorization={authorization} ids={albumIds} />}
 
+            <h1>플레이리스트</h1>
             {/* 플레이리스트 정보 가져와서 렌더링 */}
             {playlistIds.length > 0 && <GetSeveralPlaylists authorization={authorization} playlistIds={playlistIds} />}
         </div>
