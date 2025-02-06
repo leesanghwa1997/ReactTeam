@@ -134,7 +134,4 @@ const SongItem = ({ song, index, isPlaying, togglePlayPause, onLikeToggle }) => 
     );
 };
 
-<<<<<<< HEAD
-export default SongItem;
-=======
 export default SongItem;
