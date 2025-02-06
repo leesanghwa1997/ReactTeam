@@ -1,18 +1,32 @@
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import { useAuth } from '../contextAPI/AuthProvider';
+import { useState } from 'react';
 
 const PlaybackControls = () => {
   const { deviceId } = usePlayback();
   const token = useAuth().tokenData.access_token;
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlayPause = async () => {
-    await fetch(
-      `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
-      {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
+    if (isPlaying) {
+      await fetch(
+        `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      setIsPlaying(false);
+    } else {
+      await fetch(
+        `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      setIsPlaying(true);
+    }
   };
 
   const handleNextTrack = async () => {
@@ -43,5 +57,4 @@ const PlaybackControls = () => {
     </div>
   );
 };
-
 export default PlaybackControls;
