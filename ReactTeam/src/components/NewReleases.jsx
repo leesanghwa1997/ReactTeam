@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
 
@@ -19,7 +20,7 @@ const NewReleases = ({ authorization }) => {
         limit: 10,
       },
       headers: {
-        Authorization: authorization,
+        Authorization: authorization
       },
     });
 
@@ -39,6 +40,7 @@ const NewReleases = ({ authorization }) => {
   }
 
   const albums = resolved.data.albums.items;
+  console.log(albums)
 
   return (
     <div>
@@ -56,16 +58,17 @@ const NewReleases = ({ authorization }) => {
         {albums.map((album) => (
           <SwiperSlide key={album.id}>
             <div className="card">
-              <div className="thumb">
+              <Link to={`/albums/${album.id}`} className="thumb">
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}
                 />
-              </div>
+              </Link>
               <div className="text">
                 <div className="tit">{album.name}</div>
                 <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
               </div>
+
             </div>
           </SwiperSlide>
         ))}

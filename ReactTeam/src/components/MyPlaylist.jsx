@@ -1,4 +1,11 @@
 import React from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
 
@@ -43,23 +50,37 @@ const MyPlaylist = ({ authorization }) => {
 
   return (
     <div>
-      <h2>내 플레이리스트</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+      {/* <h1>내 플레이리스트</h1> */}
+
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        freeMode={true}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[FreeMode, Pagination]}
+        className="swiper"
+      >
         {playlists.map((playlist) => (
-          <div key={playlist.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-            {/* 플레이리스트 이미지 (없으면 기본 이미지) */}
-            <img
-              src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
-              alt={playlist.name}
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-            />
-            <div>
-              <strong>{playlist.name}</strong>
+          <SwiperSlide key={playlist.id}>
+            <div className='card'>
+              <Link to="" className="thumb">
+                <img
+                  src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
+                  alt={playlist.name}
+                />
+              </Link>
+              <div className="text">
+                <Link to="" className="tit">{playlist.name}</Link>
+                <div className="txt">{playlist.tracks.total} 곡</div>
+              </div>
             </div>
-            <div>곡 개수: {playlist.tracks.total}곡</div>
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+
+      </Swiper>
+
     </div>
   );
 };
