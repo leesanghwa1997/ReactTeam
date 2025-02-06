@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../contextAPI/SearchProvider';
 
 const GetSeveralAlbums = ({ authorization, ids }) => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // console.log('Authorization Token 앨범:', authorization);  // 인증 토큰 확인
+    const { setSelectedAlbum } = useContext(SearchContext); // 선택된 앨범 설정 함수 가져오기
+    const navigate = useNavigate(); // 페이지 이동을 위한 네비게이션
 
     useEffect(() => {
         const fetchAlbums = async () => {
             try {
                 const response = await axios.get('https://api.spotify.com/v1/albums', {
-                    params: {
-                        ids: ids, // 콤마로 구분된 앨범 ID들
-                        market: 'KR',
-                    },
-                    headers: {
-                        Authorization: authorization,
-                    },
+                    params: { ids, market: 'KR' },
+                    headers: { Authorization: authorization },
                 });
-                console.log("가져온 앨범 데이터:", response.data.albums);
-                setAlbums(response.data.albums); // 앨범 데이터를 상태에 저장
-                setLoading(false); // 로딩 끝
+                setAlbums(response.data.albums);
+                setLoading(false);
             } catch (err) {
                 setError(err);
                 setLoading(false);
@@ -29,34 +26,37 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
         };
 
         fetchAlbums();
-    }, [authorization, ids]); // authorization과 ids가 변경될 때마다 요청
+    }, [authorization, ids]);
 
-    // 에러 처리
-    if (error) {
-        return <p>에러 발생: {error.message}</p>;
-    }
+    if (error) return <p>에러 발생: {error.message}</p>;
+    if (loading) return <p>로딩중...</p>;
 
-    // 로딩 중 표시
-    if (loading) {
-        return <p>로딩중...</p>;
-    }
+    const handleAlbumClick = (album) => {
+        setSelectedAlbum(album); // 선택한 앨범을 전역 상태에 저장
+        navigate('/album'); // Album 페이지로 이동
+    };
 
-    // 앨범 목록 렌더링
     return (
         <div>
             <h2>앨범</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
                 {albums.map((album) => (
-                    <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-                        {/* 앨범 이미지 (없으면 기본 이미지) */}
+                    <div
+                        key={album.id}
+                        onClick={() => handleAlbumClick(album)}
+                        style={{
+                            border: '1px solid #ddd',
+                            padding: '10px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                        }}
+                    >
                         <img
                             src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                             alt={album.name}
                             style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
                         />
-                        <div>
-                            <strong>{album.name}</strong>
-                        </div>
+                        <div><strong>{album.name}</strong></div>
                         <div>발매일: {album.release_date}</div>
                         <div>트랙 수: {album.total_tracks}</div>
                     </div>

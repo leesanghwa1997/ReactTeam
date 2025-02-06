@@ -4,6 +4,7 @@ import MyPlaylist from './MyPlaylist';
 import { useAuth } from '../contextAPI/AuthProvider';
 import Main from './Main';
 import Search from './Search';
+import Album from './Album';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -24,8 +25,8 @@ const Api = ({ category }) => {
       return <MyPlaylist authorization={authorization} />;
     case 'search':
       return <Search authorization={authorization} />;
-    case 'ex2':
-      break;
+    case 'album':
+      return <Album authorization={authorization} />;
     case 'ex3':
       break;
     case 'ex4':
