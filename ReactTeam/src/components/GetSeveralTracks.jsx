@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import dots from '../assets/images/dots_three_vertical.svg';
-import { NavLink, Link } from 'react-router-dom';
+import { usePlayback } from "../contextAPI/PlaybackProvider"; // usePlayback 훅 추가
 
-
-const GetSeveralTracks = ({ authorization, ids, playUri }) => {
+const GetSeveralTracks = ({ authorization, ids }) => {
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeOptions, setActiveOptions] = useState({}); // 개별 트랙 상태 관리
-
-    // console.log("Authorization Token 트랙:", authorization); // 인증 토큰 확인
+    const { playUri } = usePlayback(); // 트랙 재생 함수
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -30,6 +26,11 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
                 console.log("🎵 가져온 트랙 데이터:", response.data.tracks);
                 setTracks(response.data.tracks);
                 setLoading(false);
+
+                // 각 트랙의 이미지 URL을 콘솔에 출력
+                // response.data.tracks.forEach((track) => {
+                //     console.log(`트랙 이름: ${track.name} | 앨범 이미지 URL: ${track.album.images[0]?.url}`);
+                // });
             } catch (err) {
                 setError(err);
                 setLoading(false);
@@ -77,7 +78,7 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
                 <li className="music-list"
                     key={track.id}
                     onClick={() => {
-                        playUri(track.uri);
+                        playUri(track.uri); // 트랙 클릭 시 재생
                         console.log("🎵 트랙 재생:", track.uri);
                     }}
                 >
@@ -122,7 +123,6 @@ const GetSeveralTracks = ({ authorization, ids, playUri }) => {
             ))}
         </ul>
     );
-
 };
 
 export default GetSeveralTracks;

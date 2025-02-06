@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { SearchContext } from "../contextAPI/SearchProvider";
-import { usePlayback } from "../contextAPI/PlaybackProvider";
 import GetSeveralAlbums from "./GetSeveralAlbums";
-import GetSeveralTracks from "./GetSeveralTracks";
+import GetSeveralTracks from "./GetSeveralTracks"; // 수정된 GetSeveralTracks 임포트
 import GetSeveralArtists from "./GetSeveralArtists";
 import GetSeveralPlaylists from "./GetSeveralPlaylists";
 
@@ -15,7 +14,6 @@ const Search = ({ authorization }) => {
     const [trackIds, setTrackIds] = useState(""); // 트랙 ID 상태
     const [artistIds, setArtistIds] = useState(""); // 아티스트 ID 상태
     const [playlistIds, setPlaylistIds] = useState([]); // 플레이리스트 ID 상태
-    const { playUri } = usePlayback(); // 트랙 재생 함수
 
     useEffect(() => {
         console.log("🔍 검색 결과 전체:", searchResults); // 전체 검색 결과 출력
@@ -53,7 +51,7 @@ const Search = ({ authorization }) => {
             {artistIds && <GetSeveralArtists authorization={authorization} ids={artistIds} />}
 
             {/* 트랙 정보 가져와서 렌더링 */}
-            {trackIds && <GetSeveralTracks authorization={authorization} ids={trackIds} playUri={playUri} />}
+            {trackIds && <GetSeveralTracks authorization={authorization} ids={trackIds} />} {/* playUri를 전달하지 않음 */}
 
             <h1>앨범</h1>
             {/* 앨범 정보 가져와서 렌더링 */}

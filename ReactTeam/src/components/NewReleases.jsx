@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, FreeMode } from "swiper/modules";
 import "swiper/css";
@@ -8,10 +8,13 @@ import "swiper/css/pagination";
 import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-
+import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../contextAPI/SearchProvider";
 
 const NewReleases = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/browse/new-releases';
+  const navigate = useNavigate();
+  const { setSelectedAlbum } = useContext(SearchContext);
 
   // API 요청 함수
   const request = () =>
@@ -40,11 +43,14 @@ const NewReleases = ({ authorization }) => {
   }
 
   const albums = resolved.data.albums.items;
-  console.log(albums)
+
+  const handleAlbumClick = (album) => {
+    setSelectedAlbum(album); // 선택한 앨범 저장
+    navigate("/album"); // Album 페이지로 이동
+  };
 
   return (
     <div>
-      {/* <h1>최신 발매 앨범</h1> */}
       <Swiper
         slidesPerView={4}
         spaceBetween={30}
@@ -57,8 +63,12 @@ const NewReleases = ({ authorization }) => {
       >
         {albums.map((album) => (
           <SwiperSlide key={album.id}>
-            <div className="card">
-              <Link to={`/albums/${album.id}`} className="thumb">
+            <div
+              className="card"
+              onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
+              style={{ cursor: "pointer" }}
+            >
+              <div className="thumb">
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}
