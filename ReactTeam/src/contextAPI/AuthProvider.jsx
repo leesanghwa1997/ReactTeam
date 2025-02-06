@@ -4,8 +4,8 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [tokenData, setTokenData] = useState(() =>
-    localStorage.getItem('token')
-      ? JSON.parse(localStorage.getItem('token'))
+    sessionStorage.getItem('token')
+      ? JSON.parse(sessionStorage.getItem('token'))
       : null,
   );
   const authData = {
@@ -14,9 +14,9 @@ export const AuthProvider = ({ children }) => {
   };
   useEffect(() => {
     if (tokenData) {
-      localStorage.setItem('token', JSON.stringify(tokenData));
+      sessionStorage.setItem('token', JSON.stringify(tokenData));
     } else {
-      localStorage.removeItem('token'); // 로그아웃 시 제거
+      sessionStorage.removeItem('token'); // 로그아웃 시 제거
     }
   }, [tokenData]);
 
