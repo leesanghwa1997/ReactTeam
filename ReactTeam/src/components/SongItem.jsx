@@ -56,3 +56,4 @@ const SongItem = ({ song, onPlayClick, index }) => {
 };
 
 export default SongItem;
+

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom'; // useParams로 URL 파라미터 받기
 import SongItem from "./SongItem";
 
-const Playlist = ({ playlistId, token, onPlayClick }) => {
+const Playlist = ({ token, onPlayClick }) => {
+    const { playlistId } = useParams(); // URL 파라미터로 playlistId 받기
     const [songs, setSongs] = useState([]);
     const [playlistInfo, setPlaylistInfo] = useState({});
     const [loading, setLoading] = useState(true);
@@ -63,11 +65,17 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
     return (
         <div className="bg-gray-800 rounded-lg p-6">
             <div className="flex flex-col items-center mb-8">
-                <img src={playlistInfo.image} alt="Playlist" className="w-40 h-40 rounded-lg shadow-lg" />
-                <h2 className="text-3xl font-bold text-white mt-4">{playlistInfo.name}</h2>
-                <p className="text-sm text-gray-400">{playlistInfo.description}</p>
-                <p className="text-xs text-gray-500 mt-2">생성일: {playlistInfo.createdAt}</p>
-                <p className="text-xs text-gray-500 mt-2">작성자: {playlistInfo.owner}</p>
+                {playlistInfo.image && (
+                    <img src={playlistInfo.image} alt="Playlist" className="w-40 h-40 rounded-lg shadow-lg" />
+                )}
+                {playlistInfo.name && <h2 className="text-3xl font-bold text-white mt-4">{playlistInfo.name}</h2>}
+                {playlistInfo.description && (
+                    <p className="text-sm text-gray-400">{playlistInfo.description}</p>
+                )}
+                {playlistInfo.createdAt && (
+                    <p className="text-xs text-gray-500 mt-2">생성일: {playlistInfo.createdAt}</p>
+                )}
+                {playlistInfo.owner && <p className="text-xs text-gray-500 mt-2">작성자: {playlistInfo.owner}</p>}
             </div>
 
             {loading ? (
