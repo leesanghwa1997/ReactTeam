@@ -5,7 +5,7 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    console.log('Authorization Token 앨범:', authorization);  // 인증 토큰 확인
+    // console.log('Authorization Token 앨범:', authorization);  // 인증 토큰 확인
 
     useEffect(() => {
         const fetchAlbums = async () => {
@@ -19,7 +19,7 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
                         Authorization: authorization,
                     },
                 });
-
+                console.log("가져온 앨범 데이터:", response.data.albums);
                 setAlbums(response.data.albums); // 앨범 데이터를 상태에 저장
                 setLoading(false); // 로딩 끝
             } catch (err) {
@@ -44,7 +44,7 @@ const GetSeveralAlbums = ({ authorization, ids }) => {
     // 앨범 목록 렌더링
     return (
         <div>
-            <h2>앨범 리스트</h2>
+            <h2>앨범</h2>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
                 {albums.map((album) => (
                     <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
