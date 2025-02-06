@@ -24,10 +24,10 @@ const MainPage = () => {
       <div className="contents">
         <div id="head">
           <SearchBar authorization={tokenData?.access_token} />
+          <LogoutButton />
         </div>
         {tokenData && <Api category={category} />}
         {playbackUri && <SpotifyPlayer />}
-        <LogoutButton />
       </div>
     </div>
   );

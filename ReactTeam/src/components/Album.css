@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+.album {}
+
+.album .info {
+  display: flex;
+  margin: 0 0 50px;
+}
+
+.album .info .thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.album .info .text {
+  flex: 1;
+  padding: 10px 50px;
+}
+
+.album .info .text .date {
+  font-size: 12px;
+  color: #444;
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+
+.album .info .text .tit {
+  font-size: 35px;
+  font-weight: 800;
+  margin: 0 0 5px;
+}
+
+.album .info .text .artist {
+  margin: 0 0 30px;
+}
+
+.album .info .text .artist a {
+  color: rgba(255 255 255 / 0.6);
+  font-size: 14px;
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.album .info .text .artist a:hover {
+  color: rgba(255 255 255 / 0.8);
+}
+
+
+.album .info .text .track {
+  font-size: 14px;
+  color: #aaa;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.album {}
