@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { SearchContext } from '../contextAPI/SearchProvider';
 import ArtistTopTracks from './ArtistTopTracks';
+import ArtistAlbums from './ArtistAlbums';
 
 const ArtistPage = ({ authorization }) => {
     const { selectedArtist } = useContext(SearchContext);
@@ -19,9 +20,15 @@ const ArtistPage = ({ authorization }) => {
 
     return (
         <div className='artist-page'>
+            <img
+                                    src={selectedArtist.images[0]?.url || 'https://via.placeholder.com/150'}
+                                    alt={selectedArtist.name}
+                                />
             <h2>{selectedArtist.name}의 인기 트랙</h2>
             {/* ✅ `selectedArtist.id`를 `ArtistTopTracks`로 전달 */}
             <ArtistTopTracks authorization={authorization} id={selectedArtist.id} />
+            <h2>{selectedArtist.name}의 앨범</h2>
+            <ArtistAlbums authorization={authorization} id={selectedArtist.id} />
         </div>
     );
 };
