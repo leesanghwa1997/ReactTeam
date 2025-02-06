@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import MyPlaylist from "./MyPlaylist";
-import Playlist from "./Playlist";
+import MyPlaylist from "../components/MyPlaylist";
+import Playlist from "../components/Playlist";
 import { useAuth } from "../contextAPI/AuthProvider";
 import { usePlayback } from "../contextAPI/PlaybackProvider";
 
