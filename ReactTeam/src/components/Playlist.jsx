@@ -17,11 +17,9 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
         return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     };
 
-    // 플레이리스트 데이터 로딩
     useEffect(() => {
         if (!playlistId || !token) return;
 
-        console.log("플레이리스트 데이터 로딩 시작");
         const fetchPlaylist = async () => {
             setLoading(true);
             setError(null);
@@ -33,7 +31,6 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
                 if (!playlistResponse.ok) throw new Error("Failed to fetch playlist");
 
                 const playlistData = await playlistResponse.json();
-                console.log("플레이리스트 데이터:", playlistData);
                 setPlaylistInfo({
                     name: playlistData.name,
                     description: playlistData.description,
@@ -55,7 +52,6 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
                     }))
                 );
             } catch (error) {
-                console.error("플레이리스트 로딩 실패:", error);
                 setError("Failed to load playlist");
             } finally {
                 setLoading(false);
@@ -65,18 +61,7 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
         fetchPlaylist();
     }, [playlistId, token]);
 
-    // 재생 버튼 클릭 처리
     const handlePlayClick = () => {
-        if (!playlistId) {
-            console.error("플레이리스트 ID가 누락되었습니다.");
-            return;
-        }
-        if (!token) {
-            console.error("토큰이 누락되었습니다.");
-            return;
-        }
-
-        console.log("재생 클릭됨");
         navigate(`/playlist/${playlistId}`);
     };
 
@@ -113,11 +98,9 @@ const Playlist = ({ token, playlistId, onPlayClick }) => {
                 <p className="text-gray-400">플레이리스트에 트랙이 없습니다.</p>
             ) : (
                 <div className="divide-y divide-gray-700">
-                    {/* SongTracks 컴포넌트에 onPlayClick 전달 */}
                     <SongTracks
                         authorization={`Bearer ${token}`} // 토큰 전달
                         ids={songs.map((song) => song.id).join(",")} // 트랙 ID를 콤마로 구분하여 전달
-                        onPlayClick={onPlayClick} // onPlayClick 전달
                     />
                 </div>
             )}
