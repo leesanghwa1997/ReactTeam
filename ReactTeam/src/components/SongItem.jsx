@@ -148,3 +148,4 @@ const SongItem = ({ song, index, isPlaying, togglePlayPause, onLikeToggle }) => 
 };
 
 export default SongItem;
+
