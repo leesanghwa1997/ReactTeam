@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useContext } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../contextAPI/SearchProvider";
 
 const NewReleases = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/browse/new-releases';
+  const navigate = useNavigate();
+  const { setSelectedAlbum } = useContext(SearchContext);
 
   // API 요청 함수
   const request = () =>
@@ -33,25 +43,44 @@ const NewReleases = ({ authorization }) => {
 
   const albums = resolved.data.albums.items;
 
+  const handleAlbumClick = (album) => {
+    setSelectedAlbum(album); // 선택한 앨범 저장
+    navigate("/album"); // Album 페이지로 이동
+  };
+
   return (
     <div>
-      <h2>최신 발매 앨범</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        freeMode={true}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[FreeMode, Pagination]}
+        className="swiper"
+      >
         {albums.map((album) => (
-          <div key={album.id} style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
-            {/* 앨범 이미지 (없으면 기본 이미지) */}
-            <img
-              src={album.images[0]?.url || 'https://via.placeholder.com/150'}
-              alt={album.name}
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
-            />
-            <div>
-              <strong>{album.name}</strong>
+          <SwiperSlide key={album.id}>
+            <div
+              className="card"
+              onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
+              style={{ cursor: "pointer" }}
+            >
+              <div className="thumb">
+                <img
+                  src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+                  alt={album.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{album.name}</div>
+                <div className="txt">{album.artists.map((artist) => artist.name).join(', ')}</div>
+              </div>
             </div>
-            <div>아티스트: {album.artists.map((artist) => artist.name).join(', ')}</div>
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </div>
   );
 };

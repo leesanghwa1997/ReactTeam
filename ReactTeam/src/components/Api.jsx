@@ -3,7 +3,8 @@ import SpotifyUserProfile from './SpotifyUserProfile';
 import MyPlaylist from './MyPlaylist';
 import { useAuth } from '../contextAPI/AuthProvider';
 import Main from './Main';
-import PlaylistMain from './PlaylistMain';
+import Search from './Search';
+import Album from './Album';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -20,10 +21,10 @@ const Api = ({ category }) => {
       return <SpotifyUserProfile authorization={authorization} />;
     case 'playlist':
       return <MyPlaylist authorization={authorization} />;
-    case 'ex1':
-      return <PlaylistMain />;
-    case 'ex2':
-      break;
+    case 'search':
+      return <Search authorization={authorization} />;
+    case 'album':
+      return <Album authorization={authorization} />;
     case 'ex3':
       break;
     case 'ex4':

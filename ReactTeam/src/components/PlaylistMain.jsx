@@ -1,28 +1,43 @@
-import React, { useState } from "react";
-import MyPlaylist from "./MyPlaylist";
-import Playlist from "./Playlist";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../contextAPI/AuthProvider";
 import { usePlayback } from "../contextAPI/PlaybackProvider";
+import Playlist from "./Playlist";
+import MyPlaylist from "./MyPlaylist";
 
 const PlaylistMain = () => {
-    const { access_token, token_type } = useAuth().tokenData;
-    const authorization = `${token_type} ${access_token}`;
+    const { access_token } = useAuth().tokenData;
     const { playTrack } = usePlayback();
     const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const handlePlayClick = (uri) => {
-        playTrack(uri);
+    useEffect(() => {
+        if (!access_token) {
+            alert("로그인 정보가 필요합니다.");
+            return;
+        }
+        setLoading(false);
+    }, [access_token]);
+
+    const handlePlayClick = async (uri) => {
+        try {
+            await playTrack(uri);
+        } catch (error) {
+            console.error("재생 오류 발생:", error);
+            alert("노래를 재생할 수 없습니다. 다시 시도해주세요.");
+        }
     };
 
     return (
         <div className="w-full max-w-6xl mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
-            {selectedPlaylistId ? (
+            {loading ? (
+                <p>로딩 중...</p>
+            ) : selectedPlaylistId ? (
                 <>
                     <button
-                        className="mb-4 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded"
+                        className="mb-4 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-full transition duration-200"
                         onClick={() => setSelectedPlaylistId(null)}
                     >
-                        🔙 뒤로가기
+                        <i className="fas fa-arrow-left mr-2"></i>🔙 뒤로가기
                     </button>
                     <Playlist
                         playlistId={selectedPlaylistId}
@@ -31,10 +46,13 @@ const PlaylistMain = () => {
                     />
                 </>
             ) : (
-                <MyPlaylist
-                    authorization={authorization}
-                    onSelectPlaylist={setSelectedPlaylistId}
-                />
+                <>
+                    <h1 className="text-2xl font-bold text-center mb-6">🎵 플레이리스트</h1>
+                    <MyPlaylist
+                        access_token={access_token}
+                        onSelectPlaylist={setSelectedPlaylistId}
+                    />
+                </>
             )}
         </div>
     );

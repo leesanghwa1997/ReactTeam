@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import SongItem from "./SongItem";
+import { useNavigate } from "react-router-dom";
+import SongTracks from "./SongTracks";
 
-const Playlist = ({ playlistId, token, onPlayClick }) => {
+const Playlist = ({ token, playlistId, onPlayClick }) => {
     const [songs, setSongs] = useState([]);
     const [playlistInfo, setPlaylistInfo] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     // 재생 시간(ms)을 분:초 형식으로 변환
     const formatDuration = (duration) => {
@@ -22,7 +24,6 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
             setLoading(true);
             setError(null);
             try {
-                // 플레이리스트 정보와 트랙 목록을 가져옴
                 const playlistResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -34,6 +35,7 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
                     name: playlistData.name,
                     description: playlistData.description,
                     image: playlistData.images[0]?.url,
+                    owner: playlistData.owner.display_name,
                     createdAt: new Date(playlistData.created_at).toLocaleDateString(),
                 });
 
@@ -59,23 +61,50 @@ const Playlist = ({ playlistId, token, onPlayClick }) => {
         fetchPlaylist();
     }, [playlistId, token]);
 
+    const handlePlayClick = () => {
+        navigate(`/playlist/${playlistId}`);
+    };
+
     return (
         <div className="bg-gray-800 rounded-lg p-6">
             <div className="flex flex-col items-center mb-8">
-                <img src={playlistInfo.image} alt="Playlist" className="w-40 h-40 rounded-lg shadow-lg" />
-                <h2 className="text-2xl font-bold text-white mt-4">{playlistInfo.name}</h2>
-                <p className="text-sm text-gray-400">{playlistInfo.description}</p>
-                <p className="text-xs text-gray-500 mt-2">생성일: {playlistInfo.createdAt}</p>
+                {playlistInfo.image && (
+                    <img src={playlistInfo.image} alt="Playlist" className="w-40 h-40 rounded-lg shadow-lg" />
+                )}
+                {playlistInfo.name && <h2 className="text-3xl font-bold text-white mt-4">{playlistInfo.name}</h2>}
+                {playlistInfo.description && (
+                    <p className="text-sm text-gray-400">{playlistInfo.description}</p>
+                )}
+                {playlistInfo.createdAt && (
+                    <p className="text-xs text-gray-500 mt-2">생성일: {playlistInfo.createdAt}</p>
+                )}
+                {playlistInfo.owner && <p className="text-xs text-gray-500 mt-2">작성자: {playlistInfo.owner}</p>}
+
+                <button
+                    onClick={handlePlayClick}
+                    className="mt-4 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-full transition duration-200"
+                >
+                    <i className="fas fa-play mr-2"></i>재생
+                </button>
             </div>
 
             {loading ? (
-                <p>로딩 중...</p>
+                <div className="flex justify-center items-center">
+                    <div className="w-8 h-8 border-4 border-t-4 border-gray-300 rounded-full animate-spin"></div>
+                </div>
             ) : error ? (
-                <p>{error}</p>
+                <p className="text-red-500 font-semibold">{error}</p>
+            ) : songs.length === 0 ? (
+                <p className="text-gray-400">플레이리스트에 트랙이 없습니다.</p>
             ) : (
-                songs.map((song) => (
-                    <SongItem key={song.id} song={song} onPlayClick={onPlayClick} />
-                ))
+                <div className="divide-y divide-gray-700">
+                    {/* SongTracks 컴포넌트에 onPlayClick 전달 */}
+                    <SongTracks
+                        authorization={`Bearer ${token}`} // 토큰 전달
+                        ids={songs.map((song) => song.id).join(",")} // 트랙 ID를 콤마로 구분하여 전달
+                        onPlayClick={onPlayClick} // onPlayClick 전달
+                    />
+                </div>
             )}
         </div>
     );
