@@ -104,7 +104,6 @@ const PlaybackControls = () => {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });
-      setPosition(positionMs);
     } catch (error) {
       console.error("Seek error:", error);
     }
@@ -214,7 +213,8 @@ const PlaybackControls = () => {
             min="0"
             max={duration}
             value={position}
-            onChange={(e) => seekToPosition(Number(e.target.value))}
+            onMouseUp={(e) => seekToPosition(Number(e.target.value))}
+            onChange={(e) => setPosition(Number(e.target.value))}
             className="progress-slider"
           />
           <div className="progress-bar" style={{ width: `${(position / duration) * 100}%` }}></div>
