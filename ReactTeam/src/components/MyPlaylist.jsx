@@ -8,6 +8,8 @@ import "swiper/css/pagination";
 import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+import plus from '../assets/images/plus.svg';
+
 
 const MyPlaylist = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/me/playlists'; // 요청할 api 선정
@@ -50,7 +52,9 @@ const MyPlaylist = ({ authorization }) => {
 
   return (
     <div className='list'>
-      {/* <h1>내 플레이리스트</h1> */}
+      <h1>내 플레이리스트
+        <button className='btn dark'><img src={plus} className="logo" alt="make" /></button>
+      </h1>
 
       <Swiper
         slidesPerView={4}
