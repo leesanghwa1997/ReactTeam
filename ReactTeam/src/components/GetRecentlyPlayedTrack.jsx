@@ -1,56 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from '../../node_modules/axios/index';
-import usePromise from '../lib/usePromise';
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, FreeMode } from 'swiper/modules';
+import { FreeMode, Pagination } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
+import useScrollData from '../lib/useScrollData';
 
 const GetRecentlyPlayedTrack = ({ authorization }) => {
   const { playUri } = usePlayback(); // 트랙 재생 함수
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const time = new Date().getTime();
-  const [endpoint, setEndpoint] = useState(
-    `https://api.spotify.com/v1/me/player/recently-played?before=${time}`,
-  ); // 요청할 api 선정
-  const request = async (endpoint) => {
-    if (loading) return <p>로딩중...</p>;
-    setLoading(true);
-    const response = await axios.get(endpoint, {
-      headers: {
-        Authorization: authorization,
-      },
-    });
-    const { items } = response.data;
-    setData((prev) => [...prev, ...items]);
-    setEndpoint(response.data.next);
-    setLoading(false);
-    console.log(data);
-  };
-
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    request(endpoint);
-    isMounted.current = true;
-  }, []);
+  const { data, loadMore } = useScrollData(
+    `https://api.spotify.com/v1/me/player/recently-played?before=${Date.now()}`,
+    authorization,
+  );
 
   const seen = new Set();
-  const unique = data.filter((item) => {
-    if (seen.has(item.track.id)) return false; // 이미 존재하면 제거
+  const uniqueData = data.filter((item) => {
+    if (seen.has(item.track.id)) return false; // 중복 제거
     seen.add(item.track.id);
-    return true; // 처음 등장한 요소만 유지
+    return true;
   });
-
-  const handleReachEnd = () => {
-    if (!isMounted.current) return;
-    if (!endpoint || loading) return;
-    request(endpoint);
-  };
-  const handleClick = (uri) => {
-    playUri(uri);
-  };
 
   return (
     <>
@@ -58,19 +25,14 @@ const GetRecentlyPlayedTrack = ({ authorization }) => {
         slidesPerView={4}
         spaceBetween={30}
         freeMode={true}
-        pagination={{
-          clickable: true,
-        }}
+        pagination={{ clickable: true }}
         modules={[FreeMode, Pagination]}
         className="swiper"
-        onReachEnd={handleReachEnd}
+        onReachEnd={loadMore} // ✅ 커스텀 훅에서 loadMore 사용
       >
-        {unique.map((item) => (
+        {uniqueData.map((item) => (
           <SwiperSlide key={item.played_at}>
-            <div
-              className="card"
-              onClick={() => handleClick(item.track.uri)} // 클릭 이벤트 추가
-            >
+            <div className="card" onClick={() => playUri(item.track.uri)}>
               <div className="thumb">
                 <img
                   src={
