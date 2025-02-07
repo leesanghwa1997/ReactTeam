@@ -1,41 +1,36 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import usePromise from '../lib/usePromise';
+import React, { useEffect } from "react";
+import axios from "axios";
 
-const AddToPlaylist = ({ authorization, playlistId, trackUris }) => {
+const AddToPlaylist = ({ authorization, playlistId, trackUris, onComplete }) => {
     const endpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
-    // 🔹 넘어온 데이터 콘솔 출력
     useEffect(() => {
-        console.log("📌 AddToPlaylist - 받은 데이터:");
-        console.log("🔑 Authorization:", authorization);
-        console.log("🎵 Playlist ID:", playlistId);
-        console.log("🎶 Track URIs:", trackUris);
-    }, [authorization, playlistId, trackUris]);
+        const addTrack = async () => {
+            console.log("📌 AddToPlaylist - 추가 요청:");
+            console.log("🔑 Authorization:", authorization);
+            console.log("🎵 Playlist ID:", playlistId);
+            console.log("🎶 Track URIs:", trackUris);
 
-    const request = () =>
-        axios.post(
-            endpoint,
-            { uris: trackUris },
-            { headers: { Authorization: authorization, "Content-Type": "application/json" } }
-        );
+            try {
+                await axios.post(
+                    endpoint,
+                    { uris: trackUris },
+                    { headers: { Authorization: authorization, "Content-Type": "application/json" } }
+                );
 
-    const [loading, resolved, error] = usePromise(request, []);
+                console.log("✅ 트랙이 플레이리스트에 추가되었습니다!");
+            } catch (error) {
+                console.error("❌ API 요청 중 오류 발생:", error);
+            }
 
-    if (error) {
-        console.error("❌ API 요청 중 오류 발생:", error);
-        return <p>❌ 트랙 추가 중 오류 발생: {error.message}</p>;
-    }
+            // ✅ 완료 후 콜백 실행하여 옵션 창 닫기
+            if (onComplete) {
+                onComplete();
+            }
+        };
 
-    if (loading) {
-        return <p>⏳ 트랙을 플레이리스트에 추가하는 중입니다...</p>;
-    }
-
-    if (!resolved) {
-        return null;
-    }
-
-    console.log("✅ 트랙이 플레이리스트에 추가되었습니다!", resolved.data);
+        addTrack();
+    }, [authorization, playlistId, trackUris, onComplete]);
 
     return null;
 };

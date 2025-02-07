@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, FreeMode } from "swiper/modules";
 import "swiper/css";
@@ -9,60 +9,59 @@ import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
 import plus from '../assets/images/plus.svg';
-
+import CreatePlaylist from './CreatePlaylist'; // ✅ Import
 
 const MyPlaylist = ({ authorization }) => {
-  const endpoint = 'https://api.spotify.com/v1/me/playlists'; // 요청할 api 선정
-  // api 요청
-  const request = () =>
-    axios.get(
-      endpoint,
-      // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
-      {
-        params: {
-          limit: 20,
-          offset: 0,
-        },
-        headers: {
-          Authorization: authorization,
-        },
+  const userEndpoint = 'https://api.spotify.com/v1/me';
+
+  const userRequest = () =>
+    axios.get(userEndpoint, {
+      headers: {
+        Authorization: authorization,
       },
-    );
+    });
 
-  // 강의시간에 썼던 api 요청 결과 가져오기
-  const [loading, resolved, error] = usePromise(request, []);
+  const playlistEndpoint = 'https://api.spotify.com/v1/me/playlists';
 
-  // 에러
-  if (error) {
-    return <p>에러 발생: {error}</p>;
-  }
+  const playlistRequest = () =>
+    axios.get(playlistEndpoint, {
+      params: { limit: 20, offset: 0 },
+      headers: { Authorization: authorization },
+    });
 
-  // 아직 답이 안돌아왔으면 표시
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
+  const [userLoading, userResolved, userError] = usePromise(userRequest, []);
+  const [playlistLoading, playlistResolved, playlistError] = usePromise(playlistRequest, []);
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
-  if (!resolved) {
-    return null;
-  }
+  const [showCreatePlaylist, setShowCreatePlaylist] = useState(false); // ✅ 상태 추가
 
-  // 응답 데이터 구조 분해 할당
-  const playlists = resolved.data.items;
+  if (userError) console.error("유저 정보 에러:", userError);
+  if (playlistError) return <p>에러 발생: {playlistError.message}</p>;
+  if (userLoading || playlistLoading) return <p>로딩중...</p>;
+  if (!userResolved || !playlistResolved) return null;
 
+  const { id: user_id } = userResolved.data;
+  const playlists = playlistResolved.data.items;
+
+  console.log(playlists);
   return (
     <div className='list'>
-      <h1>내 플레이리스트
-        <button className='btn dark'><img src={plus} className="logo" alt="make" /></button>
+      <h1>
+        내 플레이리스트
+        {/* ✅ 버튼 클릭 시 CreatePlaylist를 보여줌 */}
+        <button className='btn dark' onClick={() => setShowCreatePlaylist(true)}>
+          <img src={plus} className="logo" alt="make" />
+        </button>
       </h1>
+
+      {showCreatePlaylist && (
+        <CreatePlaylist authorization={authorization} user_id={user_id} />
+      )}
 
       <Swiper
         slidesPerView={4}
         spaceBetween={30}
         freeMode={true}
-        pagination={{
-          clickable: true,
-        }}
+        pagination={{ clickable: true }}
         modules={[FreeMode, Pagination]}
         className="swiper"
       >
@@ -71,7 +70,7 @@ const MyPlaylist = ({ authorization }) => {
             <div className='card'>
               <Link to="" className="thumb">
                 <img
-                  src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
+                  src={playlist.images ? playlist.images[0].url : 'https://via.placeholder.com/150'}
                   alt={playlist.name}
                 />
               </Link>
@@ -82,9 +81,7 @@ const MyPlaylist = ({ authorization }) => {
             </div>
           </SwiperSlide>
         ))}
-
       </Swiper>
-
     </div>
   );
 };

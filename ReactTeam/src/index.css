@@ -93,7 +93,9 @@ button.dark:hover {
     position: relative;
 }
 
-.option button {}
+.option button {
+    display: block;
+}
 
 .option button img {}
 
