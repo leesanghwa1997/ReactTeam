@@ -256,13 +256,35 @@ button.round:hover {
 .contents {
     flex: 1;
     max-width: calc(100vw - 400px);
-    padding: 40px;
+    padding: 40px 40px 140px;
 }
 
 .list {}
 
 .list>h1 {
+    display: flex;
+    align-items: center;
     margin: 0 0 20px;
+}
+
+.list>h1>.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0 0 0 auto;
+    padding: 0;
+}
+
+.list>h1>.btn img {
+    width: 20px;
+    opacity: 0.6;
+}
+
+.list>h1>.btn:hover img {
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .swiper {

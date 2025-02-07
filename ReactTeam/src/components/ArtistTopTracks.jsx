@@ -1,46 +1,44 @@
 import React from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+import GetSeveralAlbums from './GetSeveralAlbums'; // GetSeveralAlbums 컴포넌트 임포트
 
-// 여러개를 가져올땐 id는 , 로 연결되어야함
 const ArtistTopTracks = ({ authorization, id }) => {
-  const endpoint = `https://api.spotify.com/v1/artists/${id}/top-tracks`; // 요청할 api 선정
+  const endpoint = `https://api.spotify.com/v1/artists/${id}/top-tracks`;
 
-  const request = () => {
-    axios.get(
-      endpoint,
-      // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
-      {
-        params: {
-          market: 'KR',
-        },
-        headers: {
-          Authorization: authorization,
-        },
-      },
-    );
-  };
-  // 강의시간에 썼던 api 요청 결과 가져오기
+  const request = () =>
+    axios.get(endpoint, {
+      params: { market: 'KR' },
+      headers: { Authorization: authorization },
+    });
+
   const [loading, resolved, error] = usePromise(request, []);
 
-  // 에러
   if (error) {
-    return <p>에러 발생: {error}</p>;
+    return <p>❌ 에러 발생: {error.message}</p>;
   }
 
-  // 아직 답이 안돌아왔으면 표시
   if (loading) {
-    return <p>로딩중...</p>;
+    return <p>⏳ 인기 트랙을 로딩 중입니다...</p>;
   }
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
   if (!resolved) {
     return null;
   }
-  const items = resolved.data.items;
-  console.log(items);
 
-  return <div></div>;
+  const tracks = resolved.data.tracks; // API 응답의 tracks 사용
+  console.log("가져온 인기 앨범범 데이터:", tracks);
+
+  // 중복 제거된 앨범 ID 추출
+  // 중복된 데이터가 들고와지면 console에 무수한 오류가떠서 수정함함
+  const uniqueAlbumIds = [...new Set(tracks.map((track) => track.album.id))].join(",");
+  // console.log("✅ 중복 제거된 앨범 IDs:", uniqueAlbumIds);
+
+  return (
+    <div>
+      {uniqueAlbumIds && <GetSeveralAlbums authorization={authorization} ids={uniqueAlbumIds} />}
+    </div>
+  );
 };
 
 export default ArtistTopTracks;

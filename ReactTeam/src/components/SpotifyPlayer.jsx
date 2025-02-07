@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import { useAuth } from '../contextAPI/AuthProvider';
 import PlaybackControls from './PlaybackControls';
+import './SpotifyPlayer.css';
 
 const SpotifyPlayer = () => {
   const { playbackUri, deviceId, setDeviceId, playUri } = usePlayback();
@@ -62,7 +63,7 @@ const SpotifyPlayer = () => {
   }, [token, playUri]);
 
   return (
-    <div>
+    <div id='SpotifyPlayer'>
       <PlaybackControls />
     </div>
   );
