@@ -1,6 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { SearchContext } from '../contextAPI/SearchProvider';
 import AlbumTracks from './AlbumTracks';
+import './Album.css';
+
+import { NavLink, Link } from 'react-router-dom';
 
 const Album = ({ authorization }) => {
     const { selectedAlbum } = useContext(SearchContext);
@@ -16,24 +19,35 @@ const Album = ({ authorization }) => {
     }
 
     return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
+        <div className='album'>
             {/* 상단 - 앨범 이미지 */}
-            <div>
-                <img
-                    src={selectedAlbum.images[0]?.url || 'https://via.placeholder.com/300'}
-                    alt={selectedAlbum.name}
-                    style={{ width: '300px', height: '300px', objectFit: 'cover', borderRadius: '8px' }}
-                />
+            <div className="info">
+                <div className='thumb'>
+                    <img
+                        src={selectedAlbum.images[0]?.url || 'https://via.placeholder.com/300'}
+                        alt={selectedAlbum.name}
+                    />
+                </div>
+                <div className='text'>
+                    <div className='date'>{selectedAlbum.release_date}</div>
+                    <div className='tit'>{selectedAlbum.name}</div>
+                    <div className='artist'>
+                        {selectedAlbum.artists.map((artist, index) => (
+                            <Link to="" key={artist.id}>
+                                {artist.name}
+                                {index < selectedAlbum.artists.length - 1 && ", "}
+                            </Link>
+                        ))}
+                    </div>
+                    <div className='track'>{selectedAlbum.total_tracks} track</div>
+                </div>
+
             </div>
 
             {/* 중단 - 앨범 정보 */}
-            <h2>{selectedAlbum.name}</h2>
-            <p>아티스트: {selectedAlbum.artists.map((artist) => artist.name).join(', ')}</p>
-            <p>발매일: {selectedAlbum.release_date}</p>
-            <p>트랙 수: {selectedAlbum.total_tracks}</p>
 
             {/* 하단 - 트랙 리스트 */}
-            <h3>🎵 트랙 리스트</h3>
+            {/* <h3>🎵 트랙 리스트</h3> */}
             <AlbumTracks authorization={authorization} id={selectedAlbum.id} />
         </div>
     );

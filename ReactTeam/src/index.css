@@ -87,6 +87,54 @@ button.dark:hover {
 }
 
 
+
+
+.option {
+    position: relative;
+}
+
+.option button {}
+
+.option button img {}
+
+.option ul {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    transform: translate(0, 100%);
+    background: #222;
+    padding: 10px;
+    border-radius: 10px;
+    width: 200px;
+}
+
+.option ul li a {
+    display: block;
+    padding: 10px;
+    font-size: 14px;
+    color: rgba(255 255 255 / 0.8);
+    border-radius: 5px;
+}
+
+.option ul li:hover a {
+    background: #333;
+}
+
+.option.active ul {
+    display: block;
+}
+
+
+
+
+
+
+
+
+
+
 body {
     font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
 }
@@ -193,6 +241,13 @@ button.round:hover {
     margin: 0 0 50px;
 }
 
+#head .logout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 50px;
+}
+
 
 
 
@@ -206,11 +261,13 @@ button.round:hover {
 
 .list {}
 
-.list h1 {
+.list>h1 {
     margin: 0 0 20px;
 }
 
-.swiper {}
+.swiper {
+    margin: 0 0 50px;
+}
 
 .swiper .swiper-wrapper {}
 
@@ -218,10 +275,22 @@ button.round:hover {
 
 .swiper .swiper-slide .card {}
 
-.swiper .swiper-slide .card .thumb {}
+.swiper .swiper-slide .card .thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+}
 
 .swiper .swiper-slide .card .thumb img {
     width: 100%;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.swiper .swiper-slide .card .thumb:hover img {
+    transform: scale(1.05);
 }
 
 .swiper .swiper-slide .card .text {
@@ -240,11 +309,14 @@ button.round:hover {
     font-size: 12px;
     color: #aaa;
     margin: 5px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .swiper .swiper-pagination {
     position: relative;
-    margin: 20px 0 0;
+    margin: 30px 0 0;
 }
 
 .swiper .swiper-pagination .swiper-pagination-bullet {
@@ -255,7 +327,85 @@ button.round:hover {
     background: #1ED760;
 }
 
+/* artists-swiper */
+.artists-swiper .swiper-slide .card .thumb {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+}
 
+.artists-swiper .swiper-slide .card .text .tit {
+    text-align: center;
+    font-size: 16px;
+}
+
+.artists-swiper .swiper-pagination {
+    margin: 20px 0 0;
+}
+
+
+
+/* music-lists */
+.music-list-wrap {
+    margin: 0 0 50px;
+}
+
+.music-list-wrap .music-list {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255 255 255 / 0.2);
+    transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-list-wrap .music-list:hover {
+    background: #111;
+}
+
+.music-list-wrap .music-list .thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.music-list-wrap .music-list .txt {
+    width: 200px;
+    font-size: 14px;
+    color: #666;
+    padding: 0 20px;
+}
+
+.music-list-wrap .music-list .txt span {
+    display: block;
+    overflow: hidden;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-list-wrap .music-list .txt span a {
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-list-wrap .music-list .txt span a:hover {
+    color: rgba(255 255 255 / 0.8);
+}
+
+.music-list-wrap .music-list .tit {
+    flex: 1;
+    font-size: 16px;
+    color: #fff;
+}
+
+.music-list-wrap .music-list .time {
+    width: fit-content;
+}
 
 
 

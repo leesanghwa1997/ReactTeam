@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+import { NavLink, Link } from 'react-router-dom';
 import axios from "axios";
 
 const GetSeveralPlaylists = ({ authorization, playlistIds }) => {
@@ -37,22 +44,33 @@ const GetSeveralPlaylists = ({ authorization, playlistIds }) => {
 
     return (
         <div>
-            {playlists.map((playlist) => (
-                <div key={playlist.id} style={{ marginBottom: "20px" }}>
-                    <img
-                        src={playlist.images[0]?.url}
-                        alt={playlist.name}
-                        style={{
-                            width: "150px",
-                            height: "150px",
-                            borderRadius: "0", // 네모로 변경
-                            objectFit: "cover",
-                        }}
-                    />
-                    <h3>{playlist.name}</h3>
-                    <p>{playlist.description}</p>
-                </div>
-            ))}
+            <Swiper
+                slidesPerView={4}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                    clickable: true,
+                }}
+                modules={[FreeMode, Pagination]}
+                className="swiper"
+            >
+                {playlists.map((playlist) => (
+                    <SwiperSlide key={playlist.id}>
+                        <div className="card">
+                            <Link to={`/albums/${playlist.id}`} className="thumb">
+                                <img
+                                    src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
+                                    alt={playlist.name}
+                                />
+                            </Link>
+                            <div className="text">
+                                <div className="tit">{playlist.name}</div>
+                                <div className="txt">{playlist.description}</div>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </div>
     );
 
