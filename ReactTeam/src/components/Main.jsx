@@ -11,7 +11,7 @@ const Main = ({ authorization }) => {
         <div className='list'>
             <h1>최신 발매 앨범</h1>
             <NewReleases authorization={authorization} />
-            <h1>내 플레이 리스트</h1>
+            {/* <h1>내 플레이 리스트</h1> */}
             <MyPlaylist authorization={authorization} />
         </div>
     );

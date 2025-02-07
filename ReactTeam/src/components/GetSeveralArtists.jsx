@@ -67,12 +67,12 @@ const GetSeveralArtists = ({ authorization, ids }) => {
                 {artists.map((artist) => (
                     <SwiperSlide key={artist.id}>
                         <div className="card" onClick={() => handleArtistClick(artist)}>
-                            <Link to="" className="thumb">
+                            <div className="thumb">
                                 <img
                                     src={artist.images[0]?.url}
                                     alt={artist.name}
                                 />
-                            </Link>
+                            </div>
                             <div className="text">
                                 <div className="tit">{artist.name}</div>
                             </div>
