@@ -6,6 +6,7 @@ import Main from './Main';
 import Search from './Search';
 import Album from './Album';
 import ArtistPage from './ArtistPage';
+import GetRecentlyPlayedTrack from './GetRecentlyPlayedTrack';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -34,8 +35,8 @@ const Api = ({ category }) => {
       break;
     case 'ex5':
       break;
-    case 'ex6':
-      break;
+    case 'history':
+      return <GetRecentlyPlayedTrack authorization={authorization} />;
   }
   return <div></div>;
 };
