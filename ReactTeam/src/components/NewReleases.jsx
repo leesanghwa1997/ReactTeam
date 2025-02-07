@@ -14,13 +14,6 @@ import useScrollData from '../lib/useScrollData';
 const NewReleases = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/browse/new-releases?limit=10';
   const { data, handleReachEnd } = useScrollData(endpoint, authorization);
-  // 중복 제거
-  const seen = new Set();
-  const uniqueData = data.filter((item) => {
-    if (seen.has(item.id)) return false;
-    seen.add(item.id);
-    return true;
-  });
 
   const navigate = useNavigate();
   const { setSelectedAlbum } = useContext(SearchContext);
@@ -43,7 +36,7 @@ const NewReleases = ({ authorization }) => {
         onReachEnd={handleReachEnd}
         className="swiper"
       >
-        {uniqueData.map((album) => (
+        {data.map((album) => (
           <SwiperSlide key={album.id}>
             <div className="card">
               <div className="thumb" onClick={() => handleAlbumClick(album)}>
