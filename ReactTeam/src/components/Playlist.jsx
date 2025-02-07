@@ -5,10 +5,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../contextAPI/SearchProvider';
 
 // ✅ 변경된 Playlist ID (Spotify URL에서 추출)
