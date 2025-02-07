@@ -15,7 +15,9 @@ const useScrollData = (initialEndpoint, authorization) => {
         headers: { Authorization: authorization },
       });
 
-      const { items, next } = response.data;
+      let { items, next } = response.data;
+      if (!items) items = response.data.albums.items;
+      if (!next) next = response.data.albums.next;
 
       setData((prev) => [...prev, ...items]);
       setEndpoint(next);

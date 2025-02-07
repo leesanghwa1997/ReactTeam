@@ -6,20 +6,16 @@ import { usePlayback } from '../contextAPI/PlaybackProvider';
 import useScrollData from '../lib/useScrollData';
 
 const GetRecentlyPlayedTrack = ({ authorization }) => {
+  const endpoint = `https://api.spotify.com/v1/me/player/recently-played?limit=10&before=${Date.now()}`;
   const { playUri } = usePlayback(); // 트랙 재생 함수
-  const { data, handleReachEnd } = useScrollData(
-    `https://api.spotify.com/v1/me/player/recently-played?before=${Date.now()}`,
-    authorization,
-  );
+  const { data, handleReachEnd } = useScrollData(endpoint, authorization);
 
-  // 중복 제거
   const seen = new Set();
   const uniqueData = data.filter((item) => {
-    if (seen.has(item.track.id)) return false;
+    if (seen.has(item.track.id)) return false; // 중복 제거
     seen.add(item.track.id);
     return true;
   });
-
   return (
     <>
       <Swiper
