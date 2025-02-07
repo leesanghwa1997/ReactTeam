@@ -49,7 +49,7 @@ const MyPlaylist = ({ authorization }) => {
   const playlists = resolved.data.items;
 
   return (
-    <div>
+    <div className='list'>
       {/* <h1>내 플레이리스트</h1> */}
 
       <Swiper
