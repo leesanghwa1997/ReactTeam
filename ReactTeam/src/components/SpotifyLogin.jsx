@@ -16,7 +16,7 @@ const REDIRECT_URI = 'http://localhost:5173/Callback'; // response 를 가지고
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize'; // api 요청 주소
 const RESPONSE_TYPE = 'code'; // 코드로 받겠음
 const SCOPE =
-  'user-read-private user-read-email streaming user-read-playback-state'; // 내 개인정보를 어디까지 볼 수 있는지
+  'user-read-private user-read-email streaming user-read-playback-state user-read-recently-played'; // 내 개인정보를 어디까지 볼 수 있는지
 
 const SpotifyLogin = () => {
   const { clientId } = useAuth().authData; // 클라이언트 ID
