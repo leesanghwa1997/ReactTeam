@@ -63,11 +63,8 @@ const NewReleases = ({ authorization }) => {
       >
         {albums.map((album) => (
           <SwiperSlide key={album.id}>
-            <div
-              className="card"
-              onClick={() => handleAlbumClick(album)} // 클릭 이벤트 추가
-            >
-              <div className="thumb">
+            <div className="card">
+              <div className="thumb" onClick={() => handleAlbumClick(album)}>
                 <img
                   src={album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={album.name}
@@ -77,10 +74,10 @@ const NewReleases = ({ authorization }) => {
                 <div className="tit">{album.name}</div>
                 <div className="txt">
                   {album.artists.map((artist, index) => (
-                    <Link to="" key={artist.id}>
+                    <span key={artist.id}>
                       {artist.name}
                       {index < album.artists.length - 1 && ", "}
-                    </Link>
+                    </span>
                   ))}
                 </div>
               </div>
