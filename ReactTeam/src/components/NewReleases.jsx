@@ -1,52 +1,33 @@
-import React, { useContext } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, FreeMode } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
+import React, { useContext } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, FreeMode } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { NavLink, Link } from 'react-router-dom';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
-import { useNavigate } from "react-router-dom";
-import { SearchContext } from "../contextAPI/SearchProvider";
+import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../contextAPI/SearchProvider';
+import useScrollData from '../lib/useScrollData';
 
 const NewReleases = ({ authorization }) => {
-  const endpoint = 'https://api.spotify.com/v1/browse/new-releases';
+  const endpoint = 'https://api.spotify.com/v1/browse/new-releases?limit=10';
+  const { data, handleReachEnd } = useScrollData(endpoint, authorization);
+  // 중복 제거
+  const seen = new Set();
+  const uniqueData = data.filter((item) => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+
   const navigate = useNavigate();
   const { setSelectedAlbum } = useContext(SearchContext);
 
-  // API 요청 함수
-  const request = () =>
-    axios.get(endpoint, {
-      params: {
-        limit: 10,
-      },
-      headers: {
-        Authorization: authorization
-      },
-    });
-
-  // usePromise 훅을 사용하여 API 데이터 요청
-  const [loading, resolved, error] = usePromise(request, []);
-
-  if (error) {
-    return <p>에러 발생: {error.message}</p>;
-  }
-
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
-
-  if (!resolved) {
-    return null;
-  }
-
-  const albums = resolved.data.albums.items;
-
   const handleAlbumClick = (album) => {
     setSelectedAlbum(album); // 선택한 앨범 저장
-    navigate("/album"); // Album 페이지로 이동
+    navigate('/album'); // Album 페이지로 이동
   };
 
   return (
@@ -59,14 +40,17 @@ const NewReleases = ({ authorization }) => {
           clickable: true,
         }}
         modules={[FreeMode, Pagination]}
+        onReachEnd={handleReachEnd}
         className="swiper"
       >
-        {albums.map((album) => (
+        {uniqueData.map((album) => (
           <SwiperSlide key={album.id}>
             <div className="card">
               <div className="thumb" onClick={() => handleAlbumClick(album)}>
                 <img
-                  src={album.images[0]?.url || 'https://via.placeholder.com/150'}
+                  src={
+                    album.images[0]?.url || 'https://via.placeholder.com/150'
+                  }
                   alt={album.name}
                 />
               </div>
@@ -76,7 +60,7 @@ const NewReleases = ({ authorization }) => {
                   {album.artists.map((artist, index) => (
                     <span key={artist.id}>
                       {artist.name}
-                      {index < album.artists.length - 1 && ", "}
+                      {index < album.artists.length - 1 && ', '}
                     </span>
                   ))}
                 </div>
