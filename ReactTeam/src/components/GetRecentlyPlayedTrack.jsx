@@ -1,50 +1,102 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from '../../node_modules/axios/index';
-import { useAuth } from '../contextAPI/AuthProvider';
 import usePromise from '../lib/usePromise';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, FreeMode } from 'swiper/modules';
+import { Link } from 'react-router-dom';
+import { usePlayback } from '../contextAPI/PlaybackProvider';
 
-const GetPlayerQueue = () => {
-  const { tokenData } = useAuth();
-  const { access_token, token_type, expires_in, refresh_token, scope } =
-    tokenData; // data 를 구조파괴 할당
-  const authorization = `${token_type} ${access_token}`;
-  const endpoint = 'https://api.spotify.com/v1/me/player/recently-played'; // 요청할 api 선정
-  const request = () =>
-    axios.get(endpoint, {
-      params: {
-        limit: 20,
-        before: new Date().getTime(),
-      },
+const GetRecentlyPlayedTrack = ({ authorization }) => {
+  const { playUri } = usePlayback(); // 트랙 재생 함수
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const time = new Date().getTime();
+  const [endpoint, setEndpoint] = useState(
+    `https://api.spotify.com/v1/me/player/recently-played?before=${time}`,
+  ); // 요청할 api 선정
+  const request = async (endpoint) => {
+    if (loading) return <p>로딩중...</p>;
+    setLoading(true);
+    const response = await axios.get(endpoint, {
       headers: {
         Authorization: authorization,
       },
     });
-  const [loading, resolved, error] = usePromise(request, []);
+    const { items } = response.data;
+    setData((prev) => [...prev, ...items]);
+    setEndpoint(response.data.next);
+    setLoading(false);
+    console.log(data);
+  };
 
-  // 에러
-  if (error) {
-    return <p>에러 발생: {error}</p>;
-  }
+  const isMounted = useRef(false);
 
-  // 아직 답이 안돌아왔으면 표시
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
+  useEffect(() => {
+    request(endpoint);
+    isMounted.current = true;
+  }, []);
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
-  if (!resolved) {
-    return null;
-  }
+  const seen = new Set();
+  const unique = data.filter((item) => {
+    if (seen.has(item.track.id)) return false; // 이미 존재하면 제거
+    seen.add(item.track.id);
+    return true; // 처음 등장한 요소만 유지
+  });
 
-  // 응답 데이터 구조 분해 할당
-  const { items } = resolved.data;
-  // 배열임
+  const handleReachEnd = () => {
+    if (!isMounted.current) return;
+    if (!endpoint || loading) return;
+    request(endpoint);
+  };
+  const handleClick = (uri) => {
+    playUri(uri);
+  };
 
   return (
-    <div>
-      <button></button>
-    </div>
+    <>
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        freeMode={true}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[FreeMode, Pagination]}
+        className="swiper"
+        onReachEnd={handleReachEnd}
+      >
+        {unique.map((item) => (
+          <SwiperSlide key={item.played_at}>
+            <div
+              className="card"
+              onClick={() => handleClick(item.track.uri)} // 클릭 이벤트 추가
+            >
+              <div className="thumb">
+                <img
+                  src={
+                    item.track.album.images[0]?.url ||
+                    'https://via.placeholder.com/150'
+                  }
+                  alt={item.track.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{item.track.name}</div>
+                <div className="txt">
+                  {item.track.artists.map((artist, index) => (
+                    <Link to="" key={artist.id}>
+                      {artist.name}
+                      {index < item.track.artists.length - 1 && ', '}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </>
   );
 };
 
-export default GetPlayerQueue;
+export default GetRecentlyPlayedTrack;
