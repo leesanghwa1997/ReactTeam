@@ -1,50 +1,61 @@
 import React from 'react';
-import axios from '../../node_modules/axios/index';
-import { useAuth } from '../contextAPI/AuthProvider';
-import usePromise from '../lib/usePromise';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode, Pagination } from 'swiper/modules';
+import { Link } from 'react-router-dom';
+import { usePlayback } from '../contextAPI/PlaybackProvider';
+import useScrollData from '../lib/useScrollData';
 
-const GetPlayerQueue = () => {
-  const { tokenData } = useAuth();
-  const { access_token, token_type, expires_in, refresh_token, scope } =
-    tokenData; // data 를 구조파괴 할당
-  const authorization = `${token_type} ${access_token}`;
-  const endpoint = 'https://api.spotify.com/v1/me/player/recently-played'; // 요청할 api 선정
-  const request = () =>
-    axios.get(endpoint, {
-      params: {
-        limit: 20,
-        before: new Date().getTime(),
-      },
-      headers: {
-        Authorization: authorization,
-      },
-    });
-  const [loading, resolved, error] = usePromise(request, []);
+const GetRecentlyPlayedTrack = ({ authorization }) => {
+  const endpoint = `https://api.spotify.com/v1/me/player/recently-played?limit=10&before=${Date.now()}`;
+  const { playUri } = usePlayback(); // 트랙 재생 함수
+  const { data, handleReachEnd } = useScrollData(endpoint, authorization);
 
-  // 에러
-  if (error) {
-    return <p>에러 발생: {error}</p>;
-  }
-
-  // 아직 답이 안돌아왔으면 표시
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
-
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
-  if (!resolved) {
-    return null;
-  }
-
-  // 응답 데이터 구조 분해 할당
-  const { items } = resolved.data;
-  // 배열임
-
+  const seen = new Set();
+  const uniqueData = data.filter((item) => {
+    if (seen.has(item.track.id)) return false; // 중복 제거
+    seen.add(item.track.id);
+    return true;
+  });
   return (
-    <div>
-      <button></button>
-    </div>
+    <>
+      <Swiper
+        slidesPerView={4}
+        spaceBetween={30}
+        freeMode={true}
+        pagination={{ clickable: true }}
+        modules={[FreeMode, Pagination]}
+        className="swiper"
+        onReachEnd={handleReachEnd}
+      >
+        {uniqueData.map((item) => (
+          <SwiperSlide key={item.played_at}>
+            <div className="card" onClick={() => playUri(item.track.uri)}>
+              <div className="thumb">
+                <img
+                  src={
+                    item.track.album.images[0]?.url ||
+                    'https://via.placeholder.com/150'
+                  }
+                  alt={item.track.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{item.track.name}</div>
+                <div className="txt">
+                  {item.track.artists.map((artist, index) => (
+                    <Link to="" key={artist.id}>
+                      {artist.name}
+                      {index < item.track.artists.length - 1 && ', '}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </>
   );
 };
 
-export default GetPlayerQueue;
+export default GetRecentlyPlayedTrack;
