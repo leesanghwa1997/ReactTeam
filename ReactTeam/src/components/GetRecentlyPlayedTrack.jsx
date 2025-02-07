@@ -7,14 +7,15 @@ import useScrollData from '../lib/useScrollData';
 
 const GetRecentlyPlayedTrack = ({ authorization }) => {
   const { playUri } = usePlayback(); // 트랙 재생 함수
-  const { data, loadMore } = useScrollData(
+  const { data, handleReachEnd } = useScrollData(
     `https://api.spotify.com/v1/me/player/recently-played?before=${Date.now()}`,
     authorization,
   );
 
+  // 중복 제거
   const seen = new Set();
   const uniqueData = data.filter((item) => {
-    if (seen.has(item.track.id)) return false; // 중복 제거
+    if (seen.has(item.track.id)) return false;
     seen.add(item.track.id);
     return true;
   });
@@ -28,7 +29,7 @@ const GetRecentlyPlayedTrack = ({ authorization }) => {
         pagination={{ clickable: true }}
         modules={[FreeMode, Pagination]}
         className="swiper"
-        onReachEnd={loadMore} // ✅ 커스텀 훅에서 loadMore 사용
+        onReachEnd={handleReachEnd}
       >
         {uniqueData.map((item) => (
           <SwiperSlide key={item.played_at}>

@@ -7,7 +7,6 @@ const useScrollData = (initialEndpoint, authorization) => {
   const [endpoint, setEndpoint] = useState(initialEndpoint);
   const isMounted = useRef(false);
 
-  // ✅ API 요청 함수
   const request = async () => {
     if (!endpoint || loading) return;
     setLoading(true);
@@ -26,19 +25,17 @@ const useScrollData = (initialEndpoint, authorization) => {
     setLoading(false);
   };
 
-  // ✅ 첫 데이터 로드
   useEffect(() => {
     request();
     isMounted.current = true;
   }, []);
 
-  // ✅ 무한 스크롤용 핸들러
-  const loadMore = () => {
+  const handleReachEnd = () => {
     if (!isMounted.current || !endpoint || loading) return;
     request();
   };
 
-  return { data, loading, loadMore };
+  return { data, loading, handleReachEnd };
 };
 
 export default useScrollData;
