@@ -49,15 +49,16 @@ const MyPlaylistPage = ({ authorization }) => {
                     className="playlist-image"
                 />
                 <h1 className="playlist-title">{selectedMyPlayList.name}</h1>
+                <p className="track-count">
+                    <strong>{trackIds.length}</strong>곡.
+                </p>
             </div>
             
             {/* 트랙 목록 표시 */}
             {trackIds.length > 0 ? (
                 <GetSeveralTracks authorization={authorization} ids={trackIds.join(',')} />
             ) : (
-                <p>이 플레이리스트에 트랙이 없습니다. 추가하세요
-                    
-                </p>
+                <p>이 플레이리스트에 트랙이 없습니다. 추가하세요.</p>
             )}
         </div>
     );
