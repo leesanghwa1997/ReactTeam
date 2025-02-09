@@ -24,7 +24,7 @@ const CreatePlaylist = ({ authorization, user_id, playlistName, onComplete }) =>
                 { headers: { Authorization: authorization, 'Content-Type': 'application/json' } }
             );
             console.log('✅ 플레이리스트 생성 성공:', response.data);
-            alert(`플레이리스트 "${playlistName}"가 생성되었습니다.`);
+            // alert(`플레이리스트 "${playlistName}"가 생성되었습니다.`);
 
             onComplete(); // ✅ 플레이리스트 생성 후 부모 컴포넌트 상태 초기화
         } catch (error) {

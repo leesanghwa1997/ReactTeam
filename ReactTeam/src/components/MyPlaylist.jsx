@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import plus from '../assets/images/plus.svg';
+import defaultPlaylistImage from '../assets/images/default_playlist_image.webp';
 import CreatePlaylist from './CreatePlaylist';
 
 const MyPlaylist = ({ authorization }) => {
@@ -115,16 +116,20 @@ const MyPlaylist = ({ authorization }) => {
       <Swiper slidesPerView={4} spaceBetween={30} freeMode={true} pagination={{ clickable: true }} modules={[FreeMode, Pagination]} className="swiper">
         {playlists.map((playlist) => (
           <SwiperSlide key={playlist.id}>
-            <div className='card'>
-              <Link to="" className="thumb">
-                <img src={playlist.images?.[0]?.url || 'https://via.placeholder.com/150'} alt={playlist.name} />
-              </Link>
-              <div className="text">
-                <Link to="" className="tit">{playlist.name}</Link>
-                <div className="txt">{playlist.tracks.total} 곡</div>
-              </div>
+          <div className='card'>
+            <Link to="" className="thumb">
+            <img 
+  src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage} 
+  alt={playlist.name} 
+/>
+            </Link>
+            <div className="text">
+              <Link to="" className="tit">{playlist.name}</Link>
+              <div className="txt">{playlist.tracks.total} 곡</div>
             </div>
-          </SwiperSlide>
+          </div>
+        </SwiperSlide>
+        
         ))}
       </Swiper>
     </div>
