@@ -8,6 +8,7 @@ import Album from './Album';
 import ArtistPage from './ArtistPage';
 import GetRecentlyPlayedTrack from './GetRecentlyPlayedTrack';
 import MyPlaylistPage from './MyPlayListPage';
+import NewReleasesVertical from './NewReleasesVertical';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -33,11 +34,13 @@ const Api = ({ category }) => {
     case 'artist':
       return <ArtistPage authorization={authorization} />;
     case 'myPlaylist':
-      return <MyPlaylistPage authorization={authorization}/>;
+      return <MyPlaylistPage authorization={authorization} />;
     case 'ex5':
       break;
     case 'history':
       return <GetRecentlyPlayedTrack authorization={authorization} />;
+    case 'new':
+      return <NewReleasesVertical authorization={authorization} />;
   }
   return <div></div>;
 };
