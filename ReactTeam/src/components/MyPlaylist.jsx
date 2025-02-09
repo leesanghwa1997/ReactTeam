@@ -75,7 +75,7 @@ const MyPlaylist = ({ authorization }) => {
                 />
               </Link>
               <div className="text">
-                <Link to="" className="tit">{playlist.name}</Link>
+                <div className="tit">{playlist.name}</div>
                 <div className="txt">{playlist.tracks.total} 곡</div>
               </div>
             </div>
