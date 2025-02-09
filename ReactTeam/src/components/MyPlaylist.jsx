@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, FreeMode } from "swiper/modules";
 import "swiper/css";
@@ -9,6 +10,8 @@ import axios from 'axios';
 import plus from '../assets/images/plus.svg';
 import defaultPlaylistImage from '../assets/images/default_playlist_image.webp';
 import CreatePlaylist from './CreatePlaylist';
+import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../contextAPI/SearchProvider';
 
 const MyPlaylist = ({ authorization }) => {
   const userEndpoint = 'https://api.spotify.com/v1/me';
@@ -23,24 +26,30 @@ const MyPlaylist = ({ authorization }) => {
   const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
   const [showInput, setShowInput] = useState(false); // ✅ input 필드 가시성 상태
 
+  const navigate = useNavigate();
+  const { setSelectedMyPlayList } = useContext(SearchContext); // 추가
+
   // ✅ 유저 정보 & 플레이리스트 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userResponse = await axios.get(userEndpoint, { headers: { Authorization: authorization } });
         const playlistResponse = await axios.get(playlistEndpoint, { params: { limit: 20, offset: 0 }, headers: { Authorization: authorization } });
-        
+  
         setUser(userResponse.data);
         setPlaylists(playlistResponse.data.items);
+  
+        console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
       } catch (err) {
         setError(err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [authorization]);
+  
 
   // ✅ 플레이리스트 새로고침 함수
   const reloadPlaylists = async () => {
@@ -81,6 +90,13 @@ const MyPlaylist = ({ authorization }) => {
     reloadPlaylists(); // ✅ 저장 후 플레이리스트 새로고침
   };
 
+  const handlePlaylistClick = (playlist) => {
+    setSelectedMyPlayList(playlist); // 선택한 플레이리스트 저장
+    navigate('/myPlaylist', {
+      state: { playlist, authorization }
+    });
+  };
+
   return (
     <div className='list'>
       <h1>
@@ -116,15 +132,15 @@ const MyPlaylist = ({ authorization }) => {
       <Swiper slidesPerView={4} spaceBetween={30} freeMode={true} pagination={{ clickable: true }} modules={[FreeMode, Pagination]} className="swiper">
         {playlists.map((playlist) => (
           <SwiperSlide key={playlist.id}>
-          <div className='card'>
-            <Link to="" className="thumb">
-            <img 
-  src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage} 
-  alt={playlist.name} 
-/>
-            </Link>
+          <div className='card' onClick={() => handlePlaylistClick(playlist)}>
+            <div className="thumb">
+              <img 
+                src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage} 
+                alt={playlist.name} 
+              />
+            </div>
             <div className="text">
-              <Link to="" className="tit">{playlist.name}</Link>
+              <div className="tit">{playlist.name}</div>
               <div className="txt">{playlist.tracks.total} 곡</div>
             </div>
           </div>
