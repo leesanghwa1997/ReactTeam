@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CreatePlaylist = ({ authorization, user_id, playlistName }) => {
+const CreatePlaylist = ({ authorization, user_id, playlistName, onComplete }) => { // ✅ onComplete 추가
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -9,7 +9,7 @@ const CreatePlaylist = ({ authorization, user_id, playlistName }) => {
         if (playlistName.trim()) {
             createPlaylist();
         }
-    }, [playlistName]); // ✅ playlistName이 변경될 때마다 실행
+    }, [playlistName]);
 
     const createPlaylist = async () => {
         if (!playlistName.trim()) return;
@@ -25,6 +25,8 @@ const CreatePlaylist = ({ authorization, user_id, playlistName }) => {
             );
             console.log('✅ 플레이리스트 생성 성공:', response.data);
             alert(`플레이리스트 "${playlistName}"가 생성되었습니다.`);
+
+            onComplete(); // ✅ 플레이리스트 생성 후 부모 컴포넌트 상태 초기화
         } catch (error) {
             console.error('❌ 플레이리스트 생성 실패:', error.response);
             setError(error.response?.data?.error?.message || '오류 발생');
