@@ -38,8 +38,8 @@ const ArtistTopTracks = ({ authorization, id }) => {
 
   return (
     <div>
-      {tracksIds && <GetSeveralTracks authorization={authorization} ids={tracksIds} />}
       {uniqueAlbumIds && <GetSeveralAlbums authorization={authorization} ids={uniqueAlbumIds} />}
+      {tracksIds && <GetSeveralTracks authorization={authorization} ids={tracksIds} />}
     </div>
   );
 };

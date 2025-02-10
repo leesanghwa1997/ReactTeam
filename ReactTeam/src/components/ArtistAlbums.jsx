@@ -35,22 +35,19 @@ const ArtistAlbums = ({ authorization, id }) => {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px' }}>
+    <div className='albumlist'>
       {albums.map((album) => (
-        <div 
-          key={album.id} 
-          style={{ textAlign: 'center', cursor: 'pointer' }} 
-          onClick={() => handleAlbumClick(album)}
-        >
-          <img 
-            src={album.images[1]?.url} 
-            alt={album.name} 
-            width="150" 
-            height="150" 
-            style={{ borderRadius: '8px' }} 
-          />
-          <p style={{ fontWeight: 'bold', margin: '8px 0 4px' }}>{album.name}</p>
-          <p style={{ color: '#666', fontSize: '14px' }}>🎵 {album.total_tracks}곡</p>
+        <div className='card' key={album.id} onClick={() => handleAlbumClick(album)}>
+          <div className='thumb'>
+            <img
+              src={album.images[1]?.url}
+              alt={album.name}
+            />
+          </div>
+          <div className='text'>
+            <div className='tit'>{album.name}</div>
+            <div className='txt'>🎵 {album.total_tracks}곡</div>
+          </div>
         </div>
       ))}
     </div>
