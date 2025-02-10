@@ -7,6 +7,7 @@ import './ArtistPage.css';
 
 const ArtistPage = ({ authorization }) => {
     const { selectedArtist } = useContext(SearchContext);
+    console.log('아티:', selectedArtist)
 
     useEffect(() => {
         if (selectedArtist) {

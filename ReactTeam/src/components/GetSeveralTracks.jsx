@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import dots from '../assets/images/dots_three_vertical.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import AddToPlaylist from './AddToPlaylist';
 import RemoveFromPlaylist from './RemoveFromPlaylist'; // 🔹 삭제 컴포넌트 추가
+import { SearchContext } from "../contextAPI/SearchProvider";
+
 
 const GetSeveralTracks = ({
   authorization,
@@ -21,6 +23,9 @@ const GetSeveralTracks = ({
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [trackToRemove, setTrackToRemove] = useState(null); // 삭제할 트랙 상태 추가
+  const { setSelectedArtist } = useContext(SearchContext);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!isPlaylistPage) {
@@ -94,6 +99,11 @@ const GetSeveralTracks = ({
     setTrackToRemove(track); // 삭제할 트랙 설정
   };
 
+  const handleArtistClick = (artist) => {
+    setSelectedArtist(artist);
+    navigate('/artistTemp');
+  }
+
   return (
     <div>
       <ul className="music-list-wrap">
@@ -114,7 +124,11 @@ const GetSeveralTracks = ({
             <div className="txt">
               <span>
                 {track.artists.map((artist, index) => (
-                  <Link to="" key={artist.id}>
+                  <Link onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleArtistClick(artist)
+                  }} key={artist.id}>
                     {artist.name}
                     {index < track.artists.length - 1 && ', '}
                   </Link>
