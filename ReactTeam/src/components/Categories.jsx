@@ -12,14 +12,15 @@ import no_img from '../assets/images/no_img_2.svg';
 
 const main_menu = [
   { name: 'main', text: '홈', icon: home },
-  { name: 'category', text: '카테고리', icon: category },
+  // { name: 'category', text: '카테고리', icon: category },
   { name: 'new', text: '신곡', icon: newMusic },
-  { name: 'video', text: '뮤직비디오', icon: musicVideo },
-];
-const play_menu = [
+  // { name: 'video', text: '뮤직비디오', icon: musicVideo },
   { name: 'playlist', text: '플레이리스트', icon: playlist },
   { name: 'history', text: '이전기록', icon: history },
   { name: 'like', text: '좋아요', icon: like },
+];
+const play_menu = [
+
 ];
 const profile = { text: '프로필', thumb: '' };
 
