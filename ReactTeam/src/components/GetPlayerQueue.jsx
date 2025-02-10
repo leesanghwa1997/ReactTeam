@@ -2,6 +2,8 @@ import React from 'react';
 import axios from '../../node_modules/axios/index';
 import { useAuth } from '../contextAPI/AuthProvider';
 import usePromise from '../lib/usePromise';
+import AlbumTracks from './AlbumTracks';
+import GetSeveralTracks from './GetSeveralTracks';
 
 const GetPlayerQueue = () => {
   const { tokenData } = useAuth();
@@ -35,10 +37,15 @@ const GetPlayerQueue = () => {
   // 응답 데이터 구조 분해 할당
   const { currently_playing, queue } = resolved.data;
   // currently_playing 은 객체, queue 는 배열
+  // https://developer.spotify.com/documentation/web-api/reference/get-queue
+  // api 는 위의 것
+
+  const ids = queue.map((track) => track.id).join(',');
 
   return (
     <div>
-      <button></button>
+      <div>재생 목록</div>
+      {ids && <GetSeveralTracks authorization={authorization} ids={ids} />}
     </div>
   );
 };
