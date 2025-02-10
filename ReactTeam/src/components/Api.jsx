@@ -9,6 +9,8 @@ import ArtistPage from './ArtistPage';
 import GetRecentlyPlayedTrack from './GetRecentlyPlayedTrack';
 import MyPlaylistPage from './MyPlayListPage';
 import NewReleasesVertical from './NewReleasesVertical';
+import GetUsersFavoriteAlbum from './GetUsersFavoriteAlbum';
+import GetUsersFavoriteTracks from './GetUsersFavoriteTracks';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -41,6 +43,13 @@ const Api = ({ category }) => {
       return <GetRecentlyPlayedTrack authorization={authorization} />;
     case 'new':
       return <NewReleasesVertical authorization={authorization} />;
+    case 'like':
+      return (
+        <div>
+          <GetUsersFavoriteAlbum authorization={authorization} />
+          <GetUsersFavoriteTracks authorization={authorization} />
+        </div>
+      );
   }
   return <div></div>;
 };
