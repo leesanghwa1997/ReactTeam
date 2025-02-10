@@ -11,17 +11,16 @@ import MyPlaylistPage from './MyPlayListPage';
 import NewReleasesVertical from './NewReleasesVertical';
 import GetUsersFavoriteAlbum from './GetUsersFavoriteAlbum';
 import GetUsersFavoriteTracks from './GetUsersFavoriteTracks';
+import ArtistTemp from './ArtistTemp';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
   const { access_token, token_type, expires_in, refresh_token, scope } =
     tokenData; // data 를 구조파괴 할당
   const authorization = `${token_type} ${access_token}`;
-  // console.log(tokenData);
-  // console.log(localStorage.getItem('token'));
-  // // 이 authorization 을 컴포넌트마다 props로 전달
-  // console.log('Authorization Token Api:', authorization); // authorization 값 확인
-
+  console.log(tokenData);
+  console.log(localStorage.getItem('token'));
+  // 이 authorization 을 컴포넌트마다 props로 전달
   switch (category) {
     case 'main':
       return <Main authorization={authorization} />;
@@ -50,6 +49,8 @@ const Api = ({ category }) => {
           <GetUsersFavoriteTracks authorization={authorization} />
         </div>
       );
+    case 'artistTemp':
+      return (<ArtistTemp />)
   }
   return <div></div>;
 };

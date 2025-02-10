@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import dots from '../assets/images/dots_three_vertical.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
 import AddToPlaylist from './AddToPlaylist';
 import RemoveFromPlaylist from './RemoveFromPlaylist'; // 🔹 삭제 컴포넌트 추가
+import RemoveUserTrackButton from './RemoveUserTrackButton';
+import SaveTrackButton from './SaveTrackButton';
+import { SearchContext } from "../contextAPI/SearchProvider";
+
 
 const GetSeveralTracks = ({
   authorization,
@@ -21,6 +25,38 @@ const GetSeveralTracks = ({
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [trackToRemove, setTrackToRemove] = useState(null); // 삭제할 트랙 상태 추가
+  const [savedTracks, setSavedTracks] = useState({}); // 좋아요 상태 저장
+
+  useEffect(() => {
+    const fetchSavedTracks = async () => {
+      if (!ids) return;
+
+      try {
+        const response = await axios.get(
+          `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
+          {
+            headers: { Authorization: authorization },
+          }
+        );
+
+        // 결과를 { trackId: true/false } 형태의 객체로 변환
+        const savedStatus = ids.split(",").reduce((acc, id, index) => {
+          acc[id] = response.data[index];
+          return acc;
+        }, {});
+
+        setSavedTracks(savedStatus);
+      } catch (err) {
+        console.error('❌ 좋아요 상태 불러오기 실패:', err);
+      }
+    };
+
+    fetchSavedTracks();
+  }, [authorization, ids]);
+
+  const { setSelectedArtist } = useContext(SearchContext);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!isPlaylistPage) {
@@ -94,27 +130,32 @@ const GetSeveralTracks = ({
     setTrackToRemove(track); // 삭제할 트랙 설정
   };
 
+  const handleArtistClick = (artist) => {
+    setSelectedArtist(artist);
+    navigate('/artistTemp');
+  }
+
   return (
     <div>
       <ul className="music-list-wrap">
         {tracks.map((track) => (
-          <li
-            className="music-list"
-            key={track.id}
-            onClick={() => playUri(track.uri)}
-          >
+          <li className="music-list" key={track.id}>
             <div className="thumb">
               <img src={track.album.images[0]?.url} alt={track.name} />
             </div>
             <div className="txt tit">
-              <span>
+              <span onClick={() => playUri(track.uri)}>
                 <Link to="">{track.name}</Link>
               </span>
             </div>
             <div className="txt">
               <span>
                 {track.artists.map((artist, index) => (
-                  <Link to="" key={artist.id}>
+                  <Link onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleArtistClick(artist)
+                  }} key={artist.id}>
                     {artist.name}
                     {index < track.artists.length - 1 && ', '}
                   </Link>
@@ -126,6 +167,14 @@ const GetSeveralTracks = ({
                 <Link to="">{track.album.name}</Link>
               </span>
             </div>
+            <div className="like-btn">
+              {savedTracks[track.id] ? (
+                <RemoveUserTrackButton albumId={track.id} />
+              ) : (
+                <SaveTrackButton albumId={track.id} />
+              )}
+            </div>
+
             <div className="txt time">{formatDuration(track.duration_ms)}</div>
 
             <div

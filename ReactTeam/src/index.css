@@ -355,6 +355,17 @@ button.round:hover {
     transform: scale(1.05);
 }
 
+.swiper .swiper-slide .card .thumb .likeBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.swiper .swiper-slide .card .thumb .likeBtn button {
+    display: block;
+}
+
+
 .swiper .swiper-slide .card .text {
     margin: 10px 0 0;
 }
@@ -459,7 +470,8 @@ button.round:hover {
     color: rgba(255 255 255 / 0.8);
 }
 
-.music-list-wrap .music-list .like-btn img {
+.music-list-wrap .music-list .like-btn button {
+    display: block;
     width: 20px;
 }
 
@@ -471,7 +483,6 @@ button.round:hover {
 
 .music-list-wrap .music-list .time {
     width: fit-content;
-    margin: 0 0 0 20px;
 }
 
 
