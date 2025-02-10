@@ -33,7 +33,6 @@ const NewReleases = ({ authorization }) => {
           clickable: true,
         }}
         modules={[FreeMode, Pagination]}
-        onReachEnd={handleReachEnd}
         className="swiper"
       >
         {data.map((album) => (
