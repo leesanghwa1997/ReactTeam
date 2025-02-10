@@ -10,9 +10,8 @@ const ScrollContainer = styled.div`
   overflow: auto;
   height: 100%;
 
-  ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
