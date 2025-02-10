@@ -13,6 +13,16 @@ const SearchProvider = ({ children }) => {
       ? JSON.parse(sessionStorage.getItem('selectedAlbum'))
       : null,
   ); // 선택한 앨범 상태 추가
+  const [selectedArtist, setSelectedArtist] = useState(() =>
+    sessionStorage.getItem('selectedArtist')
+      ? JSON.parse(sessionStorage.getItem('selectedArtist'))
+      : null,
+  ); 
+  const [selectedMyPlayList, setSelectedMyPlayList] = useState(() =>
+    sessionStorage.getItem('selectedMyPlayList')
+      ? JSON.parse(sessionStorage.getItem('selectedMyPlayList'))
+      : null,
+  ); 
 
   useEffect(() => {
     if (searchResults) {
@@ -26,6 +36,18 @@ const SearchProvider = ({ children }) => {
     }
   }, [selectedAlbum]);
 
+  useEffect(() => {
+    if (selectedArtist) {
+      sessionStorage.setItem('selectedArtist', JSON.stringify(selectedArtist));
+    }
+  }, [selectedArtist]);
+
+  useEffect(() => {
+    if (selectedMyPlayList) {
+      sessionStorage.setItem('selectedMyPlayList', JSON.stringify(selectedMyPlayList));
+    }
+  }, [selectedMyPlayList]);
+
   return (
     <SearchContext.Provider
       value={{
@@ -33,6 +55,10 @@ const SearchProvider = ({ children }) => {
         setSearchResults,
         selectedAlbum,
         setSelectedAlbum,
+        selectedArtist,
+        setSelectedArtist,
+        selectedMyPlayList,
+        setSelectedMyPlayList,
       }}
     >
       {children}

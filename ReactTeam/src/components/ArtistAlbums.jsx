@@ -1,49 +1,57 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import usePromise from '../lib/usePromise';
+import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../contextAPI/SearchProvider';
 
-// 여러개를 가져올땐 id는 , 로 연결되어야함
 const ArtistAlbums = ({ authorization, id }) => {
-  const endpoint = `https://api.spotify.com/v1/artists/${id}/albums`; // 요청할 api 선정
+  const navigate = useNavigate();
+  const { setSelectedAlbum } = useContext(SearchContext); // 선택된 앨범을 저장하기 위한 Context 사용
+  const endpoint = `https://api.spotify.com/v1/artists/${id}/albums`;
 
-  const request = () => {
-    axios.get(
-      endpoint,
-      // 요청 설정, 일단 params 로 썼지만 url parameter 이 더 편할수 있음
-      {
-        params: {
-          include_groups: 'single',
-          market: 'KR',
-          limit: 20,
-          offset: 5,
-        },
-        headers: {
-          Authorization: authorization,
-        },
+  const request = () =>
+    axios.get(endpoint, {
+      params: {
+        include_groups: 'album,single',
+        market: 'KR',
+        limit: 10,
+        offset: 0,
       },
-    );
-  };
-  // 강의시간에 썼던 api 요청 결과 가져오기
+      headers: { Authorization: authorization },
+    });
+
   const [loading, resolved, error] = usePromise(request, []);
 
-  // 에러
-  if (error) {
-    return <p>에러 발생: {error}</p>;
-  }
+  if (error) return <p>❌ 에러 발생: {error.message}</p>;
+  if (loading) return <p>⏳ 앨범을 로딩 중입니다...</p>;
+  if (!resolved) return null;
 
-  // 아직 답이 안돌아왔으면 표시
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
+  const albums = resolved.data.items;
 
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
-  if (!resolved) {
-    return null;
-  }
-  const items = resolved.data.items;
-  console.log(items);
+  // 앨범 클릭 시 실행할 함수
+  const handleAlbumClick = (album) => {
+    setSelectedAlbum(album); // 선택한 앨범 정보를 Context에 저장
+    navigate('/album'); // 앨범 상세 페이지로 이동
+  };
 
-  return <div></div>;
+  return (
+    <div className='albumlist'>
+      {albums.map((album) => (
+        <div className='card' key={album.id} onClick={() => handleAlbumClick(album)}>
+          <div className='thumb'>
+            <img
+              src={album.images[1]?.url}
+              alt={album.name}
+            />
+          </div>
+          <div className='text'>
+            <div className='tit'>{album.name}</div>
+            <div className='txt'>🎵 {album.total_tracks}곡</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default ArtistAlbums;

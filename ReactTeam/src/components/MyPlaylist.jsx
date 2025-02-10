@@ -1,115 +1,155 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, FreeMode } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import React, { useState, useEffect, useContext } from 'react';
 
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import usePromise from '../lib/usePromise';
+import plus from '../assets/images/plus.svg';
+import defaultPlaylistImage from '../assets/images/default_playlist_image.webp';
+import CreatePlaylist from './CreatePlaylist';
+import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../contextAPI/SearchProvider';
 
 const MyPlaylist = ({ authorization }) => {
+  const userEndpoint = 'https://api.spotify.com/v1/me';
+  const playlistEndpoint = 'https://api.spotify.com/v1/me/playlists';
+
+  const [user, setUser] = useState(null);
+  const [playlists, setPlaylists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [playlistName, setPlaylistName] = useState(""); // ✅ 입력값 상태
+  const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
+  const [showInput, setShowInput] = useState(false); // ✅ input 필드 가시성 상태
+
   const navigate = useNavigate();
-  const { setSelectedAlbum } = useContext(SearchContext);
-  const [currentUserId, setCurrentUserId] = useState(null);
-  const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+  const { setSelectedMyPlayList } = useContext(SearchContext); // 추가
 
-  // ✅ 현재 로그인한 사용자의 정보 가져오기
+  // ✅ 유저 정보 & 플레이리스트 불러오기
   useEffect(() => {
-    if (!authorization) {
-      console.error('❌ 인증 정보가 없습니다.');
-      return;
-    }
+    const fetchData = async () => {
+      try {
+        const userResponse = await axios.get(userEndpoint, { headers: { Authorization: authorization } });
+        const playlistResponse = await axios.get(playlistEndpoint, { params: { limit: 20, offset: 0 }, headers: { Authorization: authorization } });
 
-    axios
-      .get('https://api.spotify.com/v1/me', {
-        headers: { Authorization: authorization },
-      })
-      .then((response) => {
-        setCurrentUserId(response.data.id);
-      })
-      .catch((error) => console.error('사용자 정보 가져오기 실패:', error))
-      .finally(() => setLoadingUserInfo(false)); // ✅ 로딩 상태 해제
+        setUser(userResponse.data);
+        setPlaylists(playlistResponse.data.items);
+
+        console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [authorization]);
 
-  // ✅ 로그인한 사용자의 플레이리스트 목록 가져오기
-  const fetchUserPlaylists = () =>
-    axios.get('https://api.spotify.com/v1/me/playlists', {
-      params: { limit: 20, offset: 0 },
-      headers: { Authorization: authorization },
-    });
 
-  const [loadingPlaylists, userPlaylists, errorUser] = usePromise(fetchUserPlaylists, [authorization]);
+  // ✅ 플레이리스트 새로고침 함수
+  const reloadPlaylists = async () => {
+    try {
+      const response = await axios.get(playlistEndpoint, { params: { limit: 20, offset: 0 }, headers: { Authorization: authorization } });
+      setPlaylists(response.data.items);
+    } catch (err) {
+      console.error("플레이리스트 새로고침 오류:", err);
+    }
+  };
 
-  if (errorUser) {
-    return <p>❌ 에러 발생: {errorUser.message}</p>;
-  }
+  if (error) return <p>에러 발생: {error.message}</p>;
+  if (loading) return <p>로딩중...</p>;
+  if (!user) return null;
 
-  if (loadingUserInfo || loadingPlaylists || currentUserId === null) {
-    return <p>⏳ 데이터를 불러오는 중...</p>;
-  }
+  const { id: user_id } = user;
 
-  // ✅ 사용자가 만든 플레이리스트만 필터링
-  const playlists = (userPlaylists?.data?.items || []).filter(
-    (playlist) => playlist.owner.id === currentUserId
-  );
+  // 🔹 input 필드 토글 함수
+  const toggleInput = () => {
+    setShowInput(!showInput);
+    if (!showInput) setPlaylistName(""); // input 필드가 열릴 때마다 입력값 초기화
+  };
 
-  // ✅ 플레이리스트 클릭 시 상세 페이지 이동
+  // 🔹 저장 버튼 클릭 시 CreatePlaylist 활성화
+  const handleSave = () => {
+    if (playlistName.trim() !== "") {
+      setShowCreatePlaylist(true);
+    } else {
+      alert("플레이리스트 이름을 입력해주세요.");
+    }
+  };
+
+  // 🔹 저장 완료 후 초기화 및 새로고침
+  const handleComplete = () => {
+    setShowCreatePlaylist(false);
+    setShowInput(false);
+    setPlaylistName("");
+    reloadPlaylists(); // ✅ 저장 후 플레이리스트 새로고침
+  };
+
   const handlePlaylistClick = (playlist) => {
-    setSelectedAlbum(playlist); // 선택한 플레이리스트 저장
-    navigate(`/playlist/${playlist.id}`); // 상세 페이지로 이동
+    setSelectedMyPlayList(playlist); // 선택한 플레이리스트 저장
+    navigate('/myPlaylist', {
+      state: { playlist, authorization }
+    });
   };
 
   return (
-    <div>
-      {playlists.length === 0 ? (
-        <p>저장된 플레이리스트가 없습니다.</p>
-      ) : (
-        <Swiper
-          slidesPerView={4}
-          spaceBetween={30}
-          navigation
-          freeMode={true}
-          pagination={{ clickable: true }}
-          modules={[Navigation, FreeMode, Pagination]}
-          className="swiper"
-        >
-          {playlists.map((playlist) => (
-            <SwiperSlide key={playlist.id}>
-              <div className="card" style={{ cursor: 'pointer' }} onClick={() => handlePlaylistClick(playlist)}>
-                <div className="thumb">
-                  <img
-                    src={playlist.images[0]?.url || 'https://via.placeholder.com/150'}
-                    alt={playlist.name}
-                  />
-                </div>
-                <div className="text">
-                  <div className="txt">
-                    {playlist.tracks?.total || 0} 곡
-                  </div>
-                  {/* ✅ Link를 추가하여 제목 클릭 시 이동 가능하도록 함 */}
-                  <Link to={`/playlist/${playlist.id}`} className="playlist-link">
-                  </Link>
-                </div>
-              </div>
-              <a
-                href={`https://open.spotify.com/playlist/${playlist.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="spotify-link"
-                onClick={(e) => e.stopPropagation()} // ✅ 링크 클릭 시 navigate 방지
-              >
-                🎵 Spotify에서 보기
-              </a>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+    <div className='list'>
+      <h1>
+        내 플레이리스트
+        {showInput && (
+          <div className="input-container">
+            <input
+              type="text"
+              value={playlistName}
+              onChange={(e) => setPlaylistName(e.target.value)}
+              placeholder="새 플레이리스트 이름"
+              className="playlist-input"
+            />
+            <button className="btn save" onClick={handleSave}>
+              저장
+            </button>
+          </div>
+        )}
+        <button className='btn dark' onClick={toggleInput}>
+          <img src={plus} className="logo" alt="make" />
+        </button>
+      </h1>
+
+      {showCreatePlaylist && (
+        <CreatePlaylist
+          authorization={authorization}
+          user_id={user_id}
+          playlistName={playlistName}
+          onComplete={handleComplete} // ✅ 저장 후 새로고침 실행
+        />
       )}
+
+      <Swiper slidesPerView={4} spaceBetween={30} freeMode={true} pagination={{ clickable: true }} modules={[FreeMode, Pagination]} className="swiper">
+        {playlists.map((playlist) => (
+          <SwiperSlide key={playlist.id}>
+            <div className='card' onClick={() => handlePlaylistClick(playlist)}>
+              <div className="thumb">
+                <img
+                  src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage}
+                  alt={playlist.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{playlist.name}</div>
+                <div className="txt">{playlist.tracks.total} 곡</div>
+              </div>
+            </div>
+          </SwiperSlide>
+
+        ))}
+      </Swiper>
     </div>
   );
 };
 
 export default MyPlaylist;
-

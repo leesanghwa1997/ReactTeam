@@ -1,50 +1,118 @@
-import React from 'react';
-import axios from '../../node_modules/axios/index';
-import { useAuth } from '../contextAPI/AuthProvider';
-import usePromise from '../lib/usePromise';
+import React, { useEffect, useRef } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode, Pagination } from 'swiper/modules';
+import { Link } from 'react-router-dom';
+import { usePlayback } from '../contextAPI/PlaybackProvider';
+import useScrollData from '../lib/useScrollData';
+import styled from 'styled-components';
 
-const GetPlayerQueue = () => {
-  const { tokenData } = useAuth();
-  const { access_token, token_type, expires_in, refresh_token, scope } =
-    tokenData; // data 를 구조파괴 할당
-  const authorization = `${token_type} ${access_token}`;
-  const endpoint = 'https://api.spotify.com/v1/me/player/recently-played'; // 요청할 api 선정
-  const request = () =>
-    axios.get(endpoint, {
-      params: {
-        limit: 20,
-        before: new Date().getTime(),
+const AlbumContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  /* overflow-y: auto;
+  max-height: 80vh;
+
+  &::-webkit-scrollbar {
+    display: none;
+  } */
+`;
+
+const AlbumItem = styled.div`
+  width: calc(25% - 12px); /* 가로 4개 배치, 간격 고려 */
+  cursor: pointer;
+`;
+
+const AlbumImageThumb = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+`;
+
+const AlbumImage = styled.img`
+  width: 100%;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const AlbumInfo = styled.div`
+  margin-top: 8px;
+`;
+
+const ArtistName = styled.span`
+  font-size: 14px;
+  color: #555;
+`;
+
+const GetRecentlyPlayedTrack = ({ authorization }) => {
+  const endpoint = `https://api.spotify.com/v1/me/player/recently-played?limit=12`;
+  const { playUri } = usePlayback(); // 트랙 재생 함수
+  const { data, handleReachEnd } = useScrollData(endpoint, authorization);
+  const listRef = useRef(null);
+
+  const seen = new Set();
+  const uniqueData = data.filter((item) => {
+    if (seen.has(item.track.id)) return false; // 중복 제거
+    seen.add(item.track.id);
+    return true;
+  });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio > 0.8) {
+          handleReachEnd;
+        }
       },
-      headers: {
-        Authorization: authorization,
-      },
-    });
-  const [loading, resolved, error] = usePromise(request, []);
+      { threshold: [0.8] },
+    );
 
-  // 에러
-  if (error) {
-    return <p>에러 발생: {error}</p>;
-  }
+    if (listRef.current) {
+      observer.observe(listRef.current);
+    }
 
-  // 아직 답이 안돌아왔으면 표시
-  if (loading) {
-    return <p>로딩중...</p>;
-  }
-
-  // 로딩이 끝났는데도 resolved 가 없으면 이상해짐
-  if (!resolved) {
-    return null;
-  }
-
-  // 응답 데이터 구조 분해 할당
-  const { items } = resolved.data;
-  // 배열임
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div>
-      <button></button>
+      <AlbumContainer ref={listRef}>
+        {uniqueData.map((item) => (
+          <AlbumItem
+            key={item.track.id}
+            onClick={() => playUri(item.track.uri)}
+          >
+            <AlbumImageThumb>
+              <AlbumImage
+                src={
+                  item.track.album.images[0]?.url ||
+                  'https://via.placeholder.com/150'
+                }
+                alt={item.track.name}
+              />
+            </AlbumImageThumb>
+            <AlbumInfo>
+              <div>{item.track.name}</div>
+              <div>
+                {item.track.artists.map((artist, index) => (
+                  <ArtistName key={artist.id}>
+                    {artist.name}
+                    {index < item.track.artists.length - 1 && ', '}
+                  </ArtistName>
+                ))}
+              </div>
+            </AlbumInfo>
+          </AlbumItem>
+        ))}
+      </AlbumContainer>
     </div>
   );
 };
 
-export default GetPlayerQueue;
+export default GetRecentlyPlayedTrack;

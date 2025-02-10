@@ -1,0 +1,206 @@
+@charset "UTF-8";
+
+#SpotifyPlayer {
+  position: fixed;
+  z-index: 1000;
+  bottom: 0%;
+  left: 0;
+  width: 100%;
+  background: #212121;
+}
+
+#SpotifyPlayer .container {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+#SpotifyPlayer .controller {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 0 50px;
+}
+
+#SpotifyPlayer .trackbar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+#SpotifyPlayer .trackbar-wrap .time {
+  font-size: 14px;
+  color: #666;
+  padding: 0 50px 0 20px;
+}
+
+#SpotifyPlayer .trackbar {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 4px;
+  background: #444;
+  border-radius: 5px;
+}
+
+#SpotifyPlayer .trackbar .progress-bar {
+  position: absolute;
+  border-radius: 5px;
+  height: 100%;
+  background: #1ED760;
+}
+
+#SpotifyPlayer .trackbar .progress-slider {
+  position: relative;
+  z-index: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+#SpotifyPlayer .trackbar .progress-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 5px;
+}
+
+#SpotifyPlayer .trackbar .progress-slider::-webkit-slider-thumb {
+  z-index: 10;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #1ED760;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+
+
+#SpotifyPlayer .info {
+  display: flex;
+  align-items: center;
+  width: 340px;
+}
+
+#SpotifyPlayer .info .thumb img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #333;
+}
+
+#SpotifyPlayer .info .text {
+  flex: 1;
+  padding: 0 15px;
+}
+
+#SpotifyPlayer .info .text .tit {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#SpotifyPlayer .info .text .artist {
+  line-height: 1rem;
+}
+
+#SpotifyPlayer .info .text .artist span {
+  font-size: 12px;
+  color: #666;
+}
+
+#SpotifyPlayer .trackOption {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0 0 0 auto;
+}
+
+#SpotifyPlayer .trackOption button img {
+  width: 22px;
+  opacity: 0.6;
+}
+
+#SpotifyPlayer .trackOption button.active img {
+  opacity: 1;
+}
+
+#SpotifyPlayer .trackOption .soundbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 4px;
+  background: #444;
+  border-radius: 5px;
+}
+
+#SpotifyPlayer .trackOption .soundbar .progress-bar {
+  position: absolute;
+  border-radius: 5px;
+  height: 100%;
+  background: #fff;
+}
+
+#SpotifyPlayer .trackOption .soundbar .volume-slider {
+  position: relative;
+  z-index: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+#SpotifyPlayer .trackOption .soundbar .volume-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 5px;
+}
+
+#SpotifyPlayer .trackOption .soundbar .volume-slider::-webkit-slider-thumb {
+  z-index: 10;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#SpotifyPlayer {}

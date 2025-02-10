@@ -5,6 +5,13 @@ import { useAuth } from '../contextAPI/AuthProvider';
 import Main from './Main';
 import Search from './Search';
 import Album from './Album';
+import ArtistPage from './ArtistPage';
+import GetRecentlyPlayedTrack from './GetRecentlyPlayedTrack';
+import MyPlaylistPage from './MyPlayListPage';
+import NewReleasesVertical from './NewReleasesVertical';
+import GetUsersFavoriteAlbum from './GetUsersFavoriteAlbum';
+import GetUsersFavoriteTracks from './GetUsersFavoriteTracks';
+import ArtistTemp from './ArtistTemp';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -25,14 +32,25 @@ const Api = ({ category }) => {
       return <Search authorization={authorization} />;
     case 'album':
       return <Album authorization={authorization} />;
-    case 'ex3':
-      break;
-    case 'ex4':
-      break;
+    case 'artist':
+      return <ArtistPage authorization={authorization} />;
+    case 'myPlaylist':
+      return <MyPlaylistPage authorization={authorization} />;
     case 'ex5':
       break;
-    case 'ex6':
-      break;
+    case 'history':
+      return <GetRecentlyPlayedTrack authorization={authorization} />;
+    case 'new':
+      return <NewReleasesVertical authorization={authorization} />;
+    case 'like':
+      return (
+        <div>
+          <GetUsersFavoriteAlbum authorization={authorization} />
+          <GetUsersFavoriteTracks authorization={authorization} />
+        </div>
+      );
+    case 'artistTemp':
+      return (<ArtistTemp />)
   }
   return <div></div>;
 };

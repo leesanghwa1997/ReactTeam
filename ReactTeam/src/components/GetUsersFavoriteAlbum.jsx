@@ -1,18 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
+import axios from '../../node_modules/axios/index';
+import useScrollData from '../lib/useScrollData';
+import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../contextAPI/SearchProvider';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { NavLink, Link } from 'react-router-dom';
-import axios from 'axios';
-import usePromise from '../lib/usePromise';
-import { useNavigate } from 'react-router-dom';
-import { SearchContext } from '../contextAPI/SearchProvider';
-import useScrollData from '../lib/useScrollData';
 
-const NewReleases = ({ authorization }) => {
-  const endpoint = 'https://api.spotify.com/v1/browse/new-releases?limit=10';
+const GetUsersFavoriteAlbum = ({ authorization }) => {
+  const endpoint = 'https://api.spotify.com/v1/me/albums?limit=10';
   const { data, handleReachEnd } = useScrollData(endpoint, authorization);
 
   const navigate = useNavigate();
@@ -35,24 +33,28 @@ const NewReleases = ({ authorization }) => {
         modules={[FreeMode, Pagination]}
         className="swiper"
       >
-        {data.map((album) => (
-          <SwiperSlide key={album.id}>
+        {data.map((item) => (
+          <SwiperSlide key={item.album.id}>
             <div className="card">
-              <div className="thumb" onClick={() => handleAlbumClick(album)}>
+              <div
+                className="thumb"
+                onClick={() => handleAlbumClick(item.album)}
+              >
                 <img
                   src={
-                    album.images[0]?.url || 'https://via.placeholder.com/150'
+                    item.album.images[0]?.url ||
+                    'https://via.placeholder.com/150'
                   }
-                  alt={album.name}
+                  alt={item.album.name}
                 />
               </div>
               <div className="text">
-                <div className="tit">{album.name}</div>
+                <div className="tit">{item.album.name}</div>
                 <div className="txt">
-                  {album.artists.map((artist, index) => (
+                  {item.album.artists.map((artist, index) => (
                     <span key={artist.id}>
                       {artist.name}
-                      {index < album.artists.length - 1 && ', '}
+                      {index < item.album.artists.length - 1 && ', '}
                     </span>
                   ))}
                 </div>
@@ -65,4 +67,4 @@ const NewReleases = ({ authorization }) => {
   );
 };
 
-export default NewReleases;
+export default GetUsersFavoriteAlbum;

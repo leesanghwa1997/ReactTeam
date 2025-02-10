@@ -1,7 +1,12 @@
 import { useState } from 'react';
+import { useAuth } from '../contextAPI/AuthProvider';
 
-const SaveAlbumButton = ({ albumId, authorization }) => {
+const SaveAlbumButton = ({ albumId }) => {
   const [saved, setSaved] = useState(false);
+  const { tokenData } = useAuth();
+  const { access_token, token_type, expires_in, refresh_token, scope } =
+    tokenData; // data 를 구조파괴 할당
+  const authorization = `${token_type} ${access_token}`;
 
   const saveAlbum = async () => {
     try {

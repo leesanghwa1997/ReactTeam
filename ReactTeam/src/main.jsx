@@ -7,6 +7,8 @@ import { AuthProvider } from './contextAPI/AuthProvider';
 import { PlaybackProvider } from './contextAPI/PlaybackProvider';
 import SearchProvider from './contextAPI/SearchProvider';
 import AlbumProvider from './contextAPI/AlbumProvider';
+import ArtistProvider from './contextAPI/ArtistProvider';
+import MyPlayListProvider from './contextAPI/MyPlayListProvider';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -14,7 +16,11 @@ createRoot(document.getElementById('root')).render(
       <PlaybackProvider>
         <SearchProvider>
           <AlbumProvider>
-            <App />
+            <ArtistProvider>
+              <MyPlayListProvider>
+                <App />
+                </MyPlayListProvider>       
+            </ArtistProvider>
           </AlbumProvider>
         </SearchProvider>
       </PlaybackProvider>
