@@ -10,12 +10,12 @@ const AlbumContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  overflow-y: auto;
+  /* overflow-y: auto;
   max-height: 80vh;
 
   &::-webkit-scrollbar {
     display: none;
-  }
+  } */
 `;
 
 const AlbumItem = styled.div`
