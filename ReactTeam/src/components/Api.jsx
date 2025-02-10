@@ -11,6 +11,7 @@ import MyPlaylistPage from './MyPlayListPage';
 import NewReleasesVertical from './NewReleasesVertical';
 import GetUsersFavoriteAlbum from './GetUsersFavoriteAlbum';
 import GetUsersFavoriteTracks from './GetUsersFavoriteTracks';
+import ArtistTemp from './ArtistTemp';
 
 const Api = ({ category }) => {
   const { tokenData } = useAuth();
@@ -48,6 +49,8 @@ const Api = ({ category }) => {
           <GetUsersFavoriteTracks authorization={authorization} />
         </div>
       );
+    case 'artistTemp':
+      return (<ArtistTemp />)
   }
   return <div></div>;
 };

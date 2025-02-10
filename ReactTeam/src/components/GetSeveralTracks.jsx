@@ -101,7 +101,7 @@ const GetSeveralTracks = ({
 
   const handleArtistClick = (artist) => {
     setSelectedArtist(artist);
-    navigate('/artist');
+    navigate('/artistTemp');
   }
 
   return (
