@@ -3,6 +3,7 @@ import { usePlayback } from '../contextAPI/PlaybackProvider';
 import { useAuth } from '../contextAPI/AuthProvider';
 import PlaybackControls from './PlaybackControls';
 import './SpotifyPlayer.css';
+import GetPlayerQueue from './GetPlayerQueue';
 
 const SpotifyPlayer = () => {
   const { playbackUri, deviceId, setDeviceId, playUri } = usePlayback();
@@ -12,6 +13,7 @@ const SpotifyPlayer = () => {
   const uriParts = playbackUri.split(':');
   const type = uriParts[1]; // 'track', 'album', 'playlist' 등
   const id = uriParts[2]; // 콘텐츠의 고유 ID
+  const [queue, setQueue] = useState(false);
   //인덱스
   useEffect(() => {
     if (!player) {
@@ -64,8 +66,18 @@ const SpotifyPlayer = () => {
   }, [token, playUri]);
 
   return (
-    <div id='SpotifyPlayer'>
-      <PlaybackControls />
+    <div
+      id="SpotifyPlayer"
+      style={
+        queue
+          ? {
+              height: '60vh',
+            }
+          : {}
+      }
+    >
+      <PlaybackControls setQueue={setQueue} />
+      {queue && <GetPlayerQueue />}
     </div>
   );
 };

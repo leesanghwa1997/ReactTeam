@@ -93,7 +93,7 @@ button.dark:hover {
     position: relative;
 }
 
-.option button {
+.option>button {
     display: block;
     white-space: nowrap;
     overflow: hidden;
@@ -101,7 +101,7 @@ button.dark:hover {
     width: 100%;
 }
 
-.option button img {}
+.option>button img {}
 
 .option ul {
     display: none;
@@ -116,15 +116,20 @@ button.dark:hover {
     width: 200px;
 }
 
-.option ul li a {
+.option ul li button {
     display: block;
     padding: 10px;
     font-size: 14px;
     color: rgba(255 255 255 / 0.8);
     border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: left;
 }
 
-.option ul li:hover a {
+.option ul li:hover button {
     background: #333;
 }
 
@@ -454,6 +459,10 @@ button.round:hover {
     color: rgba(255 255 255 / 0.8);
 }
 
+.music-list-wrap .music-list .like-btn img {
+    width: 20px;
+}
+
 .music-list-wrap .music-list .tit {
     flex: 1;
     font-size: 16px;
@@ -462,6 +471,7 @@ button.round:hover {
 
 .music-list-wrap .music-list .time {
     width: fit-content;
+    margin: 0 0 0 20px;
 }
 
 
