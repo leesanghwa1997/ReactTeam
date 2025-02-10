@@ -25,7 +25,7 @@ const MyPlaylistPage = ({ authorization }) => {
                 const ids = response.data.items
                     .map(track => track.track?.id)
                     .filter(Boolean); // undefined/null 제거
-                
+
                 setTrackIds(ids);
             } catch (error) {
                 console.error("🎵 트랙 데이터를 불러오는 중 오류 발생:", error);
@@ -43,9 +43,9 @@ const MyPlaylistPage = ({ authorization }) => {
         <div className="playlist-page">
             {/* 상단 플레이리스트 정보 */}
             <div className="playlist-header">
-                <img 
-                    src={selectedMyPlayList.images?.length > 0 ? selectedMyPlayList.images[0].url : defaultPlaylistImage} 
-                    alt={selectedMyPlayList.name} 
+                <img
+                    src={selectedMyPlayList.images?.length > 0 ? selectedMyPlayList.images[0].url : defaultPlaylistImage}
+                    alt={selectedMyPlayList.name}
                     className="playlist-image"
                 />
                 <h1 className="playlist-title">{selectedMyPlayList.name}</h1>
@@ -53,10 +53,15 @@ const MyPlaylistPage = ({ authorization }) => {
                     <strong>{trackIds.length}</strong>곡.
                 </p>
             </div>
-            
+
             {/* 트랙 목록 표시 */}
             {trackIds.length > 0 ? (
-                <GetSeveralTracks authorization={authorization} ids={trackIds.join(',')} />
+                <GetSeveralTracks
+                    authorization={authorization}
+                    ids={trackIds.join(',')}
+                    isPlaylistPage={true}
+                    playlistId={selectedMyPlayList.id}
+                />
             ) : (
                 <p>이 플레이리스트에 트랙이 없습니다. 추가하세요.</p>
             )}
