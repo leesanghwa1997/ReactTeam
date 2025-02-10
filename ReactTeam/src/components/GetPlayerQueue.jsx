@@ -4,6 +4,17 @@ import { useAuth } from '../contextAPI/AuthProvider';
 import usePromise from '../lib/usePromise';
 import AlbumTracks from './AlbumTracks';
 import GetSeveralTracks from './GetSeveralTracks';
+import styled from 'styled-components';
+
+const ScrollContainer = styled.div`
+  overflow: auto;
+  height: 100%;
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+`;
 
 const GetPlayerQueue = () => {
   const { tokenData } = useAuth();
@@ -40,12 +51,12 @@ const GetPlayerQueue = () => {
   // https://developer.spotify.com/documentation/web-api/reference/get-queue
   // api 는 위의 것
 
-  const ids = queue.map((track) => track.id).join(',');
+  const ids = [...new Set(queue.map((track) => track.id))].join(',');
 
   return (
-    <div>
+    <ScrollContainer>
       {ids && <GetSeveralTracks authorization={authorization} ids={ids} />}
-    </div>
+    </ScrollContainer>
   );
 };
 
