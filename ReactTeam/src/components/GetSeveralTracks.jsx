@@ -3,33 +3,35 @@ import axios from "axios";
 import dots from '../assets/images/dots_three_vertical.svg';
 import { Link } from 'react-router-dom';
 import { usePlayback } from "../contextAPI/PlaybackProvider";
-import AddToPlaylist from "./AddToPlaylist"; // 🔹 API 요청을 담당하는 컴포넌트
+import AddToPlaylist from "./AddToPlaylist";
+import RemoveFromPlaylist from "./RemoveFromPlaylist"; // 🔹 삭제 컴포넌트 추가
 
-const GetSeveralTracks = ({ authorization, ids }) => {
+const GetSeveralTracks = ({ authorization, ids, isPlaylistPage = false, playlistId }) => {
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { playUri } = usePlayback();
     const [activeOptions, setActiveOptions] = useState({});
-    const [playlists, setPlaylists] = useState([]); // 🎵 플레이리스트 상태
+    const [playlists, setPlaylists] = useState([]);
     const [selectedTrack, setSelectedTrack] = useState(null);
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+    const [trackToRemove, setTrackToRemove] = useState(null); // 삭제할 트랙 상태 추가
 
-    // 🎵 플레이리스트 요청
     useEffect(() => {
-        const fetchPlaylists = async () => {
-            try {
-                const response = await axios.get("https://api.spotify.com/v1/me/playlists", {
-                    params: { limit: 20, offset: 0 },
-                    headers: { Authorization: authorization },
-                });
-                setPlaylists(response.data.items);
-            } catch (err) {
-                console.error("❌ 플레이리스트 불러오기 실패:", err);
-            }
-        };
-        fetchPlaylists();
-    }, [authorization]);
+        if (!isPlaylistPage) {
+            const fetchPlaylists = async () => {
+                try {
+                    const response = await axios.get("https://api.spotify.com/v1/me/playlists", {
+                        headers: { Authorization: authorization },
+                    });
+                    setPlaylists(response.data.items);
+                } catch (err) {
+                    console.error("❌ 플레이리스트 불러오기 실패:", err);
+                }
+            };
+            fetchPlaylists();
+        }
+    }, [authorization, isPlaylistPage]);
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -56,9 +58,7 @@ const GetSeveralTracks = ({ authorization, ids }) => {
             }
         };
         document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
+        return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
     if (error) return <p>에러 발생: {error.message}</p>;
@@ -77,10 +77,13 @@ const GetSeveralTracks = ({ authorization, ids }) => {
         }));
     };
 
-    // 🎵 플레이리스트 선택 후 API 요청 실행
     const handleAddToPlaylist = (playlistId, track) => {
         setSelectedPlaylist(playlistId);
         setSelectedTrack(track);
+    };
+
+    const handleRemoveFromPlaylist = (track) => {
+        setTrackToRemove(track); // 삭제할 트랙 설정
     };
 
     return (
@@ -89,10 +92,7 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                 {tracks.map((track) => (
                     <li className="music-list"
                         key={track.id}
-                        onClick={() => {
-                            playUri(track.uri);
-                            console.log("🎵 트랙 재생:", track.uri);
-                        }}
+                        onClick={() => playUri(track.uri)}
                     >
                         <div className="thumb">
                             <img src={track.album.images[0]?.url} alt={track.name} />
@@ -118,7 +118,6 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                         </div>
                         <div className="txt time">{formatDuration(track.duration_ms)}</div>
 
-                        {/* 🎵 옵션 버튼 */}
                         <div className={`option ${activeOptions[track.id] ? "active" : ""}`}>
                             <button onClick={(e) => {
                                 e.stopPropagation();
@@ -127,19 +126,30 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                                 <img src={dots} alt="option" />
                             </button>
                             <ul>
-                                {playlists.length > 0 ? (
-                                    playlists.map((playlist) => (
-                                        <li key={playlist.id}>
-                                            <button onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleAddToPlaylist(playlist.id, track);
-                                            }}>
-                                                {playlist.name}에 추가
-                                            </button>
-                                        </li>
-                                    ))
+                                {isPlaylistPage ? (
+                                    <li>
+                                        <button onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRemoveFromPlaylist(track);
+                                        }}>
+                                            플레이 리스트에서 삭제
+                                        </button>
+                                    </li>
                                 ) : (
-                                    <li>플레이리스트 없음</li>
+                                    playlists.length > 0 ? (
+                                        playlists.map((playlist) => (
+                                            <li key={playlist.id}>
+                                                <button onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleAddToPlaylist(playlist.id, track);
+                                                }}>
+                                                    {playlist.name}에 추가
+                                                </button>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <li>플레이리스트 없음</li>
+                                    )
                                 )}
                             </ul>
                         </div>
@@ -147,7 +157,6 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                 ))}
             </ul>
 
-            {/* 🎵 선택한 트랙을 플레이리스트에 추가하는 API 요청 실행 */}
             {selectedPlaylist && selectedTrack && (
                 <AddToPlaylist
                     authorization={authorization}
@@ -157,6 +166,20 @@ const GetSeveralTracks = ({ authorization, ids }) => {
                         setActiveOptions({});
                         setSelectedPlaylist(null);
                         setSelectedTrack(null);
+                    }}
+                />
+            )}
+
+            {/* 삭제 컴포넌트 적용 */}
+            {trackToRemove && (
+                <RemoveFromPlaylist
+                    authorization={authorization}
+                    playlistId={playlistId}
+                    trackUris={[trackToRemove.uri]}  // 🔹 배열로 변경
+                    onComplete={() => {
+                        setTracks(tracks.filter((t) => t.id !== trackToRemove.id)); // UI에서 삭제
+                        setTrackToRemove(null);
+                        setActiveOptions({});
                     }}
                 />
             )}
