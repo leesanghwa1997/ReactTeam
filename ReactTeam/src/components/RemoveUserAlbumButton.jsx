@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contextAPI/AuthProvider';
+import like from '../assets/images/like_dark.svg';
+import liked from '../assets/images/like_color.svg';
 
 const RemoveUserAlbumButton = ({ albumId }) => {
   const [removed, setRemoved] = useState(false);
@@ -29,7 +31,7 @@ const RemoveUserAlbumButton = ({ albumId }) => {
 
   return (
     <button onClick={removeAlbum} disabled={removed}>
-      {removed ? 'Removed!!' : 'Remove Album'}
+      {removed ? <img src={like} alt="option" /> : <img src={liked} alt="option" />}
     </button>
   );
 };

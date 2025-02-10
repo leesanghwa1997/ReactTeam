@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contextAPI/AuthProvider';
+import like from '../assets/images/like_dark.svg';
+import liked from '../assets/images/like_color.svg';
 
 const SaveAlbumButton = ({ albumId }) => {
   const [saved, setSaved] = useState(false);
@@ -29,7 +31,7 @@ const SaveAlbumButton = ({ albumId }) => {
 
   return (
     <button onClick={saveAlbum} disabled={saved}>
-      {saved ? 'Saved!' : 'Save Album'}
+      {saved ? <img src={liked} alt="option" /> : <img src={like} alt="option" />}
     </button>
   );
 };
