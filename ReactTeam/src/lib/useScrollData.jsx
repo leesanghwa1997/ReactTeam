@@ -14,13 +14,12 @@ const useScrollData = (initialEndpoint, authorization) => {
       const response = await axios.get(endpoint, {
         headers: { Authorization: authorization },
       });
-
       let { items, next } = response.data;
-      if (!items) items = response.data.albums.items;
-      if (!next) next = response.data.albums.next;
+      if (response.data.albums) items = response.data.albums.items;
+      if (response.data.albums) next = response.data.albums.next;
 
-      setData((prev) => [...prev, ...items]);
-      setEndpoint(next);
+      if (items) setData((prev) => [...prev, ...items]);
+      if (next) setEndpoint(next);
     } catch (error) {
       console.error('데이터 불러오기 실패:', error);
     }
