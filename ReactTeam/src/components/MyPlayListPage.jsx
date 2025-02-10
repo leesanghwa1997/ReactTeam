@@ -3,6 +3,7 @@ import axios from 'axios';
 import { SearchContext } from '../contextAPI/SearchProvider';
 import GetSeveralTracks from './GetSeveralTracks';
 import defaultPlaylistImage from '../assets/images/default_playlist_image.webp';
+import play from '../assets/images/play_album.svg';
 
 const MyPlaylistPage = ({ authorization }) => {
     const { selectedMyPlayList } = useContext(SearchContext);
@@ -25,7 +26,7 @@ const MyPlaylistPage = ({ authorization }) => {
                 const ids = response.data.items
                     .map(track => track.track?.id)
                     .filter(Boolean); // undefined/null 제거
-                
+
                 setTrackIds(ids);
             } catch (error) {
                 console.error("🎵 트랙 데이터를 불러오는 중 오류 발생:", error);
@@ -40,23 +41,29 @@ const MyPlaylistPage = ({ authorization }) => {
     }
 
     return (
-        <div className="playlist-page">
+        <div className="album">
             {/* 상단 플레이리스트 정보 */}
-            <div className="playlist-header">
-                <img 
-                    src={selectedMyPlayList.images?.length > 0 ? selectedMyPlayList.images[0].url : defaultPlaylistImage} 
-                    alt={selectedMyPlayList.name} 
-                    className="playlist-image"
-                />
-                <h1 className="playlist-title">{selectedMyPlayList.name}</h1>
+            <div className='info'>
+                <div className="thumb">
+                    <img
+                        src={selectedMyPlayList.images?.length > 0 ? selectedMyPlayList.images[0].url : defaultPlaylistImage}
+                        alt={selectedMyPlayList.name}
+                        className="playlist-image"
+                    />
+                </div>
+                <div className="text">
+                    <div className="tit">{selectedMyPlayList.name}</div>
+                    <div className='track'>{selectedMyPlayList.tracks.total} track</div>
+                    <button className='album-play'><img src={play} />Play</button>
+                </div>
             </div>
-            
+
             {/* 트랙 목록 표시 */}
             {trackIds.length > 0 ? (
                 <GetSeveralTracks authorization={authorization} ids={trackIds.join(',')} />
             ) : (
                 <p>이 플레이리스트에 트랙이 없습니다. 추가하세요
-                    
+
                 </p>
             )}
         </div>
