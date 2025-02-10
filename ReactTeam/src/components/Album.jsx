@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { SearchContext } from '../contextAPI/SearchProvider';
 import AlbumTracks from './AlbumTracks';
 import './Album.css';
-
+import play from '../assets/images/play_album.svg';
 import { NavLink, Link } from 'react-router-dom';
 
 const Album = ({ authorization }) => {
@@ -40,6 +40,7 @@ const Album = ({ authorization }) => {
                         ))}
                     </div>
                     <div className='track'>{selectedAlbum.total_tracks} track</div>
+                    <button className='album-play'><img src={play} />Play</button>
                 </div>
 
             </div>

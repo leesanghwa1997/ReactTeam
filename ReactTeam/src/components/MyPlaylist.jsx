@@ -141,7 +141,7 @@ const MyPlaylist = ({ authorization }) => {
               </div>
               <div className="text">
                 <div className="tit">{playlist.name}</div>
-                {/* <div className="txt">{playlist.tracks.total} 곡</div> */}
+                <div className="txt">{playlist.tracks.total} 곡</div>
               </div>
             </div>
           </SwiperSlide>
