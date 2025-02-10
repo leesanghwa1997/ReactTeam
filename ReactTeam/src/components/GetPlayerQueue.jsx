@@ -44,7 +44,6 @@ const GetPlayerQueue = () => {
 
   return (
     <div>
-      <div>재생 목록</div>
       {ids && <GetSeveralTracks authorization={authorization} ids={ids} />}
     </div>
   );
