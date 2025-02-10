@@ -8,6 +8,7 @@
 }
 
 .album .info .thumb {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +16,46 @@
   height: 300px;
   border-radius: 20px;
   overflow: hidden;
+}
+
+.album .info .thumb img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.album .info .thumb .likeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.album .info .thumb .likeBtn button {
+  display: block;
+}
+
+.album-play {
+  margin: 50px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 15px 2px 2px;
+  border-radius: 50px;
+  background: #222;
+  color: #666;
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.album-play:hover {
+  background: #333;
+  color: #fff;
+}
+
+.album-play img {
+  width: 30px;
 }
 
 .album .info .text {

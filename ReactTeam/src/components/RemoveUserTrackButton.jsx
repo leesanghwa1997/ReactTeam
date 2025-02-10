@@ -3,7 +3,7 @@ import { useAuth } from '../contextAPI/AuthProvider';
 import like from '../assets/images/like_dark.svg';
 import liked from '../assets/images/like_color.svg';
 
-const RemoveUserAlbumButton = ({ albumId }) => {
+const RemoveUserTrackButton = ({ albumId }) => {
   const [removed, setRemoved] = useState(false);
   const { tokenData } = useAuth();
   const { access_token, token_type, expires_in, refresh_token, scope } =
@@ -12,7 +12,7 @@ const RemoveUserAlbumButton = ({ albumId }) => {
 
   const removeAlbum = async () => {
     try {
-      const response = await fetch('https://api.spotify.com/v1/me/albums', {
+      const response = await fetch('https://api.spotify.com/v1/me/tracks', {
         method: 'DELETE',
         headers: {
           Authorization: authorization,
@@ -36,4 +36,4 @@ const RemoveUserAlbumButton = ({ albumId }) => {
   );
 };
 
-export default RemoveUserAlbumButton;
+export default RemoveUserTrackButton;

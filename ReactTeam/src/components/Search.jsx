@@ -16,7 +16,7 @@ const Search = ({ authorization }) => {
     const [playlistIds, setPlaylistIds] = useState([]); // 플레이리스트 ID 상태
 
     useEffect(() => {
-        console.log("🔍 검색 결과 전체:", searchResults); // 전체 검색 결과 출력
+        // console.log("🔍 검색 결과 전체:", searchResults); // 전체 검색 결과 출력
 
         if (searchResults?.albums) {
             const ids = searchResults.albums.items.map((album) => album.id).join(",");

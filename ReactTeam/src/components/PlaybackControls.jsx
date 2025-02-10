@@ -13,15 +13,15 @@ import playlist from '../assets/images/playlist.svg';
 import no_img from '../assets/images/no_img_2.svg';
 import dots from '../assets/images/dots_three_vertical.svg';
 
-const PlaybackControls = () => {
+const PlaybackControls = ({ setQueue }) => {
   const { deviceId } = usePlayback();
   const token = useAuth().tokenData.access_token;
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isRepeat, setIsRepeat] = useState(false); // 🔄 반복 모드
-  const [isShuffle, setIsShuffle] = useState(false); // 🔀 셔플 모드
+  const [isRepeat, setIsRepeat] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(50); // 🎚️ 기본 볼륨 50
-  const [prevVolume, setPrevVolume] = useState(50); // 🔊 뮤트 해제 시 복원할 볼륨
+  const [volume, setVolume] = useState(50);
+  const [prevVolume, setPrevVolume] = useState(50);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(100000);
   const [trackImg, setTrackImg] = useState();
@@ -30,8 +30,6 @@ const PlaybackControls = () => {
 
   const spotifyApi = 'https://api.spotify.com/v1/me/player';
 
-
-  // 🎵 현재 상태 가져오기
   const fetchPlaybackState = async () => {
     try {
       const res = await fetch(spotifyApi, {
@@ -41,10 +39,10 @@ const PlaybackControls = () => {
       if (!res.ok) throw new Error('Failed to fetch playback state');
 
       const data = await res.json();
-      console.log('Playback state:', data);
+      // console.log('Playback state:', data);
 
       setIsPlaying(data.is_playing);
-      setIsRepeat(data.repeat_state !== "off");
+      setIsRepeat(data.repeat_state !== 'off');
       setIsShuffle(data.shuffle_state);
       setVolume(data.device.volume_percent);
       setIsMuted(data.device.volume_percent === 0);
@@ -66,7 +64,6 @@ const PlaybackControls = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // ▶️⏸️ 재생/일시정지
   const handlePlayPause = async () => {
     if (isPlaying) {
       await fetch(`${spotifyApi}/pause?device_id=${deviceId}`, {
@@ -83,7 +80,6 @@ const PlaybackControls = () => {
     }
   };
 
-  // ⏩⏪ 트랙 이동
   const handleNextTrack = async () => {
     await fetch(`${spotifyApi}/next?device_id=${deviceId}`, {
       method: 'POST',
@@ -97,15 +93,14 @@ const PlaybackControls = () => {
     });
   };
 
-  // ⏩ 트랙 위치 이동
   const seekToPosition = async (positionMs) => {
     try {
       await fetch(`${spotifyApi}/seek?position_ms=${positionMs}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (error) {
-      console.error("Seek error:", error);
+      console.error('Seek error:', error);
     }
   };
   const formatTime = (ms) => {
@@ -114,7 +109,6 @@ const PlaybackControls = () => {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`; // 2자리로 표시
   };
 
-  // 🔄 반복 모드 토글
   const setRepeatMode = async () => {
     try {
       const newMode = isRepeat ? 'off' : 'track'; // 'track' -> 한 곡 반복, 'off' -> 해제
@@ -128,7 +122,6 @@ const PlaybackControls = () => {
     }
   };
 
-  // 🎚️ 볼륨 조절
   const setPlaybackVolume = async (volumePercent) => {
     try {
       await fetch(`${spotifyApi}/volume?volume_percent=${volumePercent}`, {
@@ -142,7 +135,6 @@ const PlaybackControls = () => {
     }
   };
 
-  // 🔀 셔플 모드 토글
   const togglePlaybackShuffle = async () => {
     try {
       await fetch(`${spotifyApi}/shuffle?state=${!isShuffle}`, {
@@ -155,58 +147,67 @@ const PlaybackControls = () => {
     }
   };
 
-  // 🔇 뮤트 토글
   const toggleMute = async () => {
     try {
       if (isMuted) {
-        // 🔊 이전 볼륨으로 복원
         await setPlaybackVolume(prevVolume);
         setIsMuted(false);
       } else {
-        // 🔇 현재 볼륨 저장 후 0으로 설정
         setPrevVolume(volume || 50);
         await setPlaybackVolume(0);
         setIsMuted(true);
       }
     } catch (error) {
-      console.error("Mute error:", error);
+      console.error('Mute error:', error);
     }
   };
 
-
   return (
-    <div className='container'>
-      <div className='info'>
-        <div className='thumb'>
+    <div className="container">
+      <div className="info">
+        <div className="thumb">
           <img src={trackImg || no_img} alt="album image" />
         </div>
-        <div className='text'>
-          <div className='tit'>{trackName}</div>
-          <div className='artist'>
-            {trackArtists && trackArtists.map((artist, index) => (
-              <span key={index}>{artist.name}{index < trackArtists.length - 1 && ', '}</span>
-            ))}
+        <div className="text">
+          <div className="tit">{trackName}</div>
+          <div className="artist">
+            {trackArtists &&
+              trackArtists.map((artist, index) => (
+                <span key={index}>
+                  {artist.name}
+                  {index < trackArtists.length - 1 && ', '}
+                </span>
+              ))}
           </div>
         </div>
         <div className={`option`}>
-          <button onClick={(e) => {
-            e.stopPropagation(); // 부모 요소(li) 클릭 이벤트 방지
-            toggleMenu(track.id);
-          }}><img src={dots} alt="option" /></button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleMenu(track.id);
+            }}
+          >
+            <img src={dots} alt="option" />
+          </button>
           <ul>
             <li>플레이리스트1에 추가</li>
           </ul>
         </div>
       </div>
 
-      <div className='controller'>
-        <button onClick={handlePrevTrack}><img src={prev} alt="prev" /></button>
-        <button onClick={handlePlayPause}><img src={isPlaying ? pause : play} alt="play/pause" /></button>
-        <button onClick={handleNextTrack}><img src={next} alt="next" /></button>
+      <div className="controller">
+        <button onClick={handlePrevTrack}>
+          <img src={prev} alt="prev" />
+        </button>
+        <button onClick={handlePlayPause}>
+          <img src={isPlaying ? pause : play} alt="play/pause" />
+        </button>
+        <button onClick={handleNextTrack}>
+          <img src={next} alt="next" />
+        </button>
       </div>
 
-      {/* 🎚️ 트랙 진행 바 */}
-      <div className='trackbar-wrap'>
+      <div className="trackbar-wrap">
         <div className="trackbar">
           <input
             type="range"
@@ -217,17 +218,23 @@ const PlaybackControls = () => {
             onChange={(e) => setPosition(Number(e.target.value))}
             className="progress-slider"
           />
-          <div className="progress-bar" style={{ width: `${(position / duration) * 100}%` }}></div>
+          <div
+            className="progress-bar"
+            style={{ width: `${(position / duration) * 100}%` }}
+          ></div>
         </div>
-        <div className='time'>{formatTime(position)}/{formatTime(duration)}</div>
+        <div className="time">
+          {formatTime(position)}/{formatTime(duration)}
+        </div>
       </div>
 
-      <div className='trackOption'>
-        {/* 뮤트 버튼 */}
-        <button className={`mute ${isMuted ? "" : "active"}`} onClick={toggleMute}>
+      <div className="trackOption">
+        <button
+          className={`mute ${isMuted ? '' : 'active'}`}
+          onClick={toggleMute}
+        >
           <img src={isMuted ? mute : unmute} alt="mute/unmute" />
         </button>
-        {/* 볼륨 슬라이더 */}
         <div className="soundbar">
           <input
             type="range"
@@ -239,17 +246,23 @@ const PlaybackControls = () => {
           />
           <div className="progress-bar" style={{ width: `${volume}%` }}></div>
         </div>
-        {/* 🔄 반복 모드 */}
-        <button className={`repeat ${isRepeat ? "active" : ""}`} onClick={setRepeatMode}>
+        <button
+          className={`repeat ${isRepeat ? 'active' : ''}`}
+          onClick={setRepeatMode}
+        >
           <img src={repeat} alt="repeat" />
         </button>
 
-        {/* 🔀 셔플 모드 */}
-        <button className={`shuffle ${isShuffle ? "active" : ""}`} onClick={togglePlaybackShuffle}>
+        <button
+          className={`shuffle ${isShuffle ? 'active' : ''}`}
+          onClick={togglePlaybackShuffle}
+        >
           <img src={shuffle} alt="shuffle" />
         </button>
 
-        <button><img src={playlist} alt="playlist" /></button>
+        <button onClick={() => setQueue((prev) => !prev)}>
+          <img src={playlist} alt="playlist" />
+        </button>
       </div>
     </div>
   );

@@ -35,21 +35,21 @@ const MyPlaylist = ({ authorization }) => {
       try {
         const userResponse = await axios.get(userEndpoint, { headers: { Authorization: authorization } });
         const playlistResponse = await axios.get(playlistEndpoint, { params: { limit: 20, offset: 0 }, headers: { Authorization: authorization } });
-  
+
         setUser(userResponse.data);
         setPlaylists(playlistResponse.data.items);
-  
-        console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
+
+        // console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
       } catch (err) {
         setError(err);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [authorization]);
-  
+
 
   // ✅ 플레이리스트 새로고침 함수
   const reloadPlaylists = async () => {
@@ -132,20 +132,20 @@ const MyPlaylist = ({ authorization }) => {
       <Swiper slidesPerView={4} spaceBetween={30} freeMode={true} pagination={{ clickable: true }} modules={[FreeMode, Pagination]} className="swiper">
         {playlists.map((playlist) => (
           <SwiperSlide key={playlist.id}>
-          <div className='card' onClick={() => handlePlaylistClick(playlist)}>
-            <div className="thumb">
-              <img 
-                src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage} 
-                alt={playlist.name} 
-              />
+            <div className='card' onClick={() => handlePlaylistClick(playlist)}>
+              <div className="thumb">
+                <img
+                  src={playlist.images?.length > 0 ? playlist.images[0].url : defaultPlaylistImage}
+                  alt={playlist.name}
+                />
+              </div>
+              <div className="text">
+                <div className="tit">{playlist.name}</div>
+                {/* <div className="txt">{playlist.tracks.total} 곡</div> */}
+              </div>
             </div>
-            <div className="text">
-              <div className="tit">{playlist.name}</div>
-              <div className="txt">{playlist.tracks.total} 곡</div>
-            </div>
-          </div>
-        </SwiperSlide>
-        
+          </SwiperSlide>
+
         ))}
       </Swiper>
     </div>

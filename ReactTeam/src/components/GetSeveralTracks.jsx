@@ -1,167 +1,255 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import dots from '../assets/images/dots_three_vertical.svg';
-import { Link } from 'react-router-dom';
-import { usePlayback } from "../contextAPI/PlaybackProvider";
-import AddToPlaylist from "./AddToPlaylist"; // 🔹 API 요청을 담당하는 컴포넌트
+import { Link, useNavigate } from 'react-router-dom';
+import { usePlayback } from '../contextAPI/PlaybackProvider';
+import AddToPlaylist from './AddToPlaylist';
+import RemoveFromPlaylist from './RemoveFromPlaylist'; // 🔹 삭제 컴포넌트 추가
+import RemoveUserTrackButton from './RemoveUserTrackButton';
+import SaveTrackButton from './SaveTrackButton';
+import { SearchContext } from "../contextAPI/SearchProvider";
 
-const GetSeveralTracks = ({ authorization, ids }) => {
-    const [tracks, setTracks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { playUri } = usePlayback();
-    const [activeOptions, setActiveOptions] = useState({});
-    const [playlists, setPlaylists] = useState([]); // 🎵 플레이리스트 상태
-    const [selectedTrack, setSelectedTrack] = useState(null);
-    const [selectedPlaylist, setSelectedPlaylist] = useState(null);
 
-    // 🎵 플레이리스트 요청
-    useEffect(() => {
-        const fetchPlaylists = async () => {
-            try {
-                const response = await axios.get("https://api.spotify.com/v1/me/playlists", {
-                    params: { limit: 20, offset: 0 },
-                    headers: { Authorization: authorization },
-                });
-                setPlaylists(response.data.items);
-            } catch (err) {
-                console.error("❌ 플레이리스트 불러오기 실패:", err);
-            }
-        };
-        fetchPlaylists();
-    }, [authorization]);
+const GetSeveralTracks = ({
+  authorization,
+  ids,
+  isPlaylistPage = false,
+  playlistId,
+}) => {
+  const [tracks, setTracks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { playUri } = usePlayback();
+  const [activeOptions, setActiveOptions] = useState({});
+  const [playlists, setPlaylists] = useState([]);
+  const [selectedTrack, setSelectedTrack] = useState(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [trackToRemove, setTrackToRemove] = useState(null); // 삭제할 트랙 상태 추가
+  const [savedTracks, setSavedTracks] = useState({}); // 좋아요 상태 저장
 
-    useEffect(() => {
-        const fetchTracks = async () => {
-            if (!ids) return;
-            try {
-                const response = await axios.get("https://api.spotify.com/v1/tracks", {
-                    params: { ids, market: "KR" },
-                    headers: { Authorization: authorization },
-                });
-                setTracks(response.data.tracks);
-                setLoading(false);
-            } catch (err) {
-                setError(err);
-                setLoading(false);
-            }
-        };
-        fetchTracks();
-    }, [authorization, ids]);
+  useEffect(() => {
+    const fetchSavedTracks = async () => {
+      if (!ids) return;
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (!event.target.closest(".option")) {
-                setActiveOptions({});
-            }
-        };
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
+      try {
+        const response = await axios.get(
+          `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
+          {
+            headers: { Authorization: authorization },
+          }
+        );
 
-    if (error) return <p>에러 발생: {error.message}</p>;
-    if (loading) return <p>로딩중...</p>;
+        // 결과를 { trackId: true/false } 형태의 객체로 변환
+        const savedStatus = ids.split(",").reduce((acc, id, index) => {
+          acc[id] = response.data[index];
+          return acc;
+        }, {});
 
-    const formatDuration = (ms) => {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = ((ms % 60000) / 1000).toFixed(0);
-        return `${minutes}:${seconds.padStart(2, "0")}`;
+        setSavedTracks(savedStatus);
+      } catch (err) {
+        console.error('❌ 좋아요 상태 불러오기 실패:', err);
+      }
     };
 
-    const toggleMenu = (trackId) => {
-        setActiveOptions((prev) => ({
-            ...prev,
-            [trackId]: !prev[trackId],
-        }));
+    fetchSavedTracks();
+  }, [authorization, ids]);
+
+  const { setSelectedArtist } = useContext(SearchContext);
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isPlaylistPage) {
+      const fetchPlaylists = async () => {
+        try {
+          const response = await axios.get(
+            'https://api.spotify.com/v1/me/playlists',
+            {
+              headers: { Authorization: authorization },
+            },
+          );
+          setPlaylists(response.data.items);
+        } catch (err) {
+          console.error('❌ 플레이리스트 불러오기 실패:', err);
+        }
+      };
+      fetchPlaylists();
+    }
+  }, [authorization, isPlaylistPage]);
+
+  useEffect(() => {
+    const fetchTracks = async () => {
+      if (!ids) return;
+      try {
+        const response = await axios.get('https://api.spotify.com/v1/tracks', {
+          params: { ids, market: 'KR' },
+          headers: { Authorization: authorization },
+        });
+        setTracks(response.data.tracks);
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
     };
+    fetchTracks();
+  }, [authorization, ids]);
 
-    // 🎵 플레이리스트 선택 후 API 요청 실행
-    const handleAddToPlaylist = (playlistId, track) => {
-        setSelectedPlaylist(playlistId);
-        setSelectedTrack(track);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.option')) {
+        setActiveOptions({});
+      }
     };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
-    return (
-        <>
-            <ul className="music-list-wrap">
-                {tracks.map((track) => (
-                    <li className="music-list"
-                        key={track.id}
-                        onClick={() => {
-                            playUri(track.uri);
-                            console.log("🎵 트랙 재생:", track.uri);
-                        }}
-                    >
-                        <div className="thumb">
-                            <img src={track.album.images[0]?.url} alt={track.name} />
-                        </div>
-                        <div className="txt tit">
-                            <span>
-                                <Link to="">{track.name}</Link>
-                            </span>
-                        </div>
-                        <div className="txt">
-                            <span>
-                                {track.artists.map((artist, index) => (
-                                    <Link to="" key={artist.id}>
-                                        {artist.name}{index < track.artists.length - 1 && ", "}
-                                    </Link>
-                                ))}
-                            </span>
-                        </div>
-                        <div className="txt">
-                            <span>
-                                <Link to="">{track.album.name}</Link>
-                            </span>
-                        </div>
-                        <div className="txt time">{formatDuration(track.duration_ms)}</div>
+  if (error) return <p>에러 발생: {error.message}</p>;
+  if (loading) return <p>로딩중...</p>;
 
-                        {/* 🎵 옵션 버튼 */}
-                        <div className={`option ${activeOptions[track.id] ? "active" : ""}`}>
-                            <button onClick={(e) => {
-                                e.stopPropagation();
-                                toggleMenu(track.id);
-                            }}>
-                                <img src={dots} alt="option" />
-                            </button>
-                            <ul>
-                                {playlists.length > 0 ? (
-                                    playlists.map((playlist) => (
-                                        <li key={playlist.id}>
-                                            <button onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleAddToPlaylist(playlist.id, track);
-                                            }}>
-                                                {playlist.name}에 추가
-                                            </button>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li>플레이리스트 없음</li>
-                                )}
-                            </ul>
-                        </div>
-                    </li>
+  const formatDuration = (ms) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
+    return `${minutes}:${seconds.padStart(2, '0')}`;
+  };
+
+  const toggleMenu = (trackId) => {
+    setActiveOptions((prev) => ({
+      ...prev,
+      [trackId]: !prev[trackId],
+    }));
+  };
+
+  const handleAddToPlaylist = (playlistId, track) => {
+    setSelectedPlaylist(playlistId);
+    setSelectedTrack(track);
+  };
+
+  const handleRemoveFromPlaylist = (track) => {
+    setTrackToRemove(track); // 삭제할 트랙 설정
+  };
+
+  const handleArtistClick = (artist) => {
+    setSelectedArtist(artist);
+    navigate('/artistTemp');
+  }
+
+  return (
+    <div>
+      <ul className="music-list-wrap">
+        {tracks.map((track) => (
+          <li className="music-list" key={track.id}>
+            <div className="thumb">
+              <img src={track.album.images[0]?.url} alt={track.name} />
+            </div>
+            <div className="txt tit">
+              <span onClick={() => playUri(track.uri)}>
+                <Link to="">{track.name}</Link>
+              </span>
+            </div>
+            <div className="txt">
+              <span>
+                {track.artists.map((artist, index) => (
+                  <Link onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleArtistClick(artist)
+                  }} key={artist.id}>
+                    {artist.name}
+                    {index < track.artists.length - 1 && ', '}
+                  </Link>
                 ))}
-            </ul>
+              </span>
+            </div>
+            <div className="txt">
+              <span>
+                <Link to="">{track.album.name}</Link>
+              </span>
+            </div>
+            <div className="like-btn">
+              {savedTracks[track.id] ? (
+                <RemoveUserTrackButton albumId={track.id} />
+              ) : (
+                <SaveTrackButton albumId={track.id} />
+              )}
+            </div>
 
-            {/* 🎵 선택한 트랙을 플레이리스트에 추가하는 API 요청 실행 */}
-            {selectedPlaylist && selectedTrack && (
-                <AddToPlaylist
-                    authorization={authorization}
-                    playlistId={selectedPlaylist}
-                    trackUris={[selectedTrack.uri]}
-                    onComplete={() => {
-                        setActiveOptions({});
-                        setSelectedPlaylist(null);
-                        setSelectedTrack(null);
-                    }}
-                />
-            )}
-        </>
-    );
+            <div className="txt time">{formatDuration(track.duration_ms)}</div>
+
+            <div
+              className={`option ${activeOptions[track.id] ? 'active' : ''}`}
+            >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenu(track.id);
+                }}
+              >
+                <img src={dots} alt="option" />
+              </button>
+              <ul>
+                {isPlaylistPage ? (
+                  <li>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFromPlaylist(track);
+                      }}
+                    >
+                      플레이 리스트에서 삭제
+                    </button>
+                  </li>
+                ) : playlists.length > 0 ? (
+                  playlists.map((playlist) => (
+                    <li key={playlist.id}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToPlaylist(playlist.id, track);
+                        }}
+                      >
+                        {playlist.name}에 추가
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li>플레이리스트 없음</li>
+                )}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {selectedPlaylist && selectedTrack && (
+        <AddToPlaylist
+          authorization={authorization}
+          playlistId={selectedPlaylist}
+          trackUris={[selectedTrack.uri]}
+          onComplete={() => {
+            setActiveOptions({});
+            setSelectedPlaylist(null);
+            setSelectedTrack(null);
+          }}
+        />
+      )}
+
+      {/* 삭제 컴포넌트 적용 */}
+      {trackToRemove && (
+        <RemoveFromPlaylist
+          authorization={authorization}
+          playlistId={playlistId}
+          trackUris={[trackToRemove.uri]} // 🔹 배열로 변경
+          onComplete={() => {
+            setTracks(tracks.filter((t) => t.id !== trackToRemove.id)); // UI에서 삭제
+            setTrackToRemove(null);
+            setActiveOptions({});
+          }}
+        />
+      )}
+    </div>
+  );
 };
 
 export default GetSeveralTracks;

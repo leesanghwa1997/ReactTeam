@@ -31,7 +31,7 @@ const GetSeveralArtists = ({ authorization, ids }) => {
                     },
                 });
 
-                console.log("가져온 아티스트 데이터:", response.data.artists);
+                // console.log("가져온 아티스트 데이터:", response.data.artists);
                 setArtists(response.data.artists);
                 setLoading(false);
             } catch (err) {
