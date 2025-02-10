@@ -5,6 +5,8 @@ import './Album.css';
 import play from '../assets/images/play_album.svg';
 import { NavLink, Link } from 'react-router-dom';
 import { usePlayback } from '../contextAPI/PlaybackProvider';
+import SaveAlbumButton from './SaveAlbumButton';
+import RemoveUserAlbumButton from './RemoveUserAlbumButton';
 
 const Album = ({ authorization }) => {
   const { selectedAlbum } = useContext(SearchContext);
@@ -51,6 +53,8 @@ const Album = ({ authorization }) => {
             <img src={play} />
             Play
           </button>
+          <SaveAlbumButton albumId={selectedAlbum.id} />
+          <RemoveUserAlbumButton albumId={selectedAlbum.id} />
         </div>
       </div>
 
@@ -59,6 +63,7 @@ const Album = ({ authorization }) => {
       {/* 하단 - 트랙 리스트 */}
       {/* <h3>🎵 트랙 리스트</h3> */}
       <AlbumTracks authorization={authorization} id={selectedAlbum.id} />
+
     </div>
   );
 };
