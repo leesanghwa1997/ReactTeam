@@ -66,9 +66,12 @@ const SpotifyPlayer = () => {
   }, [token, playUri]);
 
   return (
-    <div id="SpotifyPlayer" style={queue ? { height: 'auto' } : {}}>
+    <div
+      id="SpotifyPlayer"
+      style={queue ? { height: 'auto', maxHeight: '80%' } : {}}
+    >
       <PlaybackControls setQueue={setQueue} />
-      {queue && <GetPlayerQueue style={{ overflowY: 'auto' }} />}
+      {queue && <GetPlayerQueue />}
     </div>
   );
 };
