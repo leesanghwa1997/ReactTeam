@@ -16,7 +16,7 @@ const Album = ({ authorization }) => {
 
     useEffect(() => {
         if (selectedAlbum) {
-            console.log('🎵 선택된 앨범 ID:', selectedAlbum.id);
+            // console.log('🎵 선택된 앨범 ID:', selectedAlbum.id);
             checkIfAlbumIsFavorite();
         }
     }, [selectedAlbum]);

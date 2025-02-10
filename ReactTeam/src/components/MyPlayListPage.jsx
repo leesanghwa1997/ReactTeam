@@ -14,7 +14,7 @@ const MyPlaylistPage = ({ authorization }) => {
   useEffect(() => {
     if (!selectedMyPlayList) return;
 
-    console.log('🎵 선택된 플레이 리스트 데이터:', selectedMyPlayList);
+    // console.log('🎵 선택된 플레이 리스트 데이터:', selectedMyPlayList);
 
     const fetchTracks = async () => {
       try {
@@ -59,7 +59,7 @@ const MyPlaylistPage = ({ authorization }) => {
         </div>
         <div className="text">
           <div className="tit">{selectedMyPlayList.name}</div>
-          <div className="track">{selectedMyPlayList.tracks.total} track</div>
+          {/* <div className="track">{selectedMyPlayList.tracks.total} track</div> */}
           <button
             className="album-play"
             onClick={() => playUri(selectedMyPlayList.uri)}

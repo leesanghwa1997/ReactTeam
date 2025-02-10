@@ -7,12 +7,12 @@ import './ArtistPage.css';
 
 const ArtistPage = ({ authorization }) => {
     const { selectedArtist } = useContext(SearchContext);
-    console.log('아티:', selectedArtist)
+    // console.log('아티:', selectedArtist);
 
     useEffect(() => {
         if (selectedArtist) {
-            console.log("🎵 선택된 아티스트 ID:", selectedArtist.id);
-            console.log("🎵 선택된 아티스트 :", selectedArtist);
+            // console.log("🎵 선택된 아티스트 ID:", selectedArtist.id);
+            // console.log("🎵 선택된 아티스트 :", selectedArtist);
         } else {
             console.log("🚨 선택된 아티스트가 없습니다.");
         }

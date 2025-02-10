@@ -39,7 +39,7 @@ const PlaybackControls = ({ setQueue }) => {
       if (!res.ok) throw new Error('Failed to fetch playback state');
 
       const data = await res.json();
-      console.log('Playback state:', data);
+      // console.log('Playback state:', data);
 
       setIsPlaying(data.is_playing);
       setIsRepeat(data.repeat_state !== 'off');

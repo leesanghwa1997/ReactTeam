@@ -29,13 +29,13 @@ const SpotifyPlayer = () => {
         });
 
         newPlayer.addListener('player_state_changed', (state) => {
-          console.log('Player state changed:', state);
+          // console.log('Player state changed:', state);
         });
 
         newPlayer.connect().then((success) => {
           if (success) {
             setPlayer(newPlayer);
-            console.log('player 준비 완료');
+            // console.log('player 준비 완료');
           }
         });
       };
@@ -47,9 +47,9 @@ const SpotifyPlayer = () => {
       console.log('player 생성 완료');
     }
 
-    console.log('플레이어', player);
+    // console.log('플레이어', player);
     if (player && deviceId && playbackUri) {
-      console.log('재생 api 호출');
+      // console.log('재생 api 호출');
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {

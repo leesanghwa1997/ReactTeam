@@ -25,7 +25,7 @@ const ArtistTemp = () => {
                     },
                 });
 
-                console.log("가져온 아티스트 데이터:", response.data);
+                // console.log("가져온 아티스트 데이터:", response.data);
                 setSelectedArtist(response.data);
                 setLoading(false);
                 navigate('/artist')

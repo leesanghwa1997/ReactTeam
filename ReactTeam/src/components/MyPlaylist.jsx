@@ -39,7 +39,7 @@ const MyPlaylist = ({ authorization }) => {
         setUser(userResponse.data);
         setPlaylists(playlistResponse.data.items);
 
-        console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
+        // console.log("🎵 불러온 플레이리스트 데이터:", playlistResponse.data.items); // ✅ 콘솔 출력
       } catch (err) {
         setError(err);
       } finally {
@@ -141,7 +141,7 @@ const MyPlaylist = ({ authorization }) => {
               </div>
               <div className="text">
                 <div className="tit">{playlist.name}</div>
-                <div className="txt">{playlist.tracks.total} 곡</div>
+                {/* <div className="txt">{playlist.tracks.total} 곡</div> */}
               </div>
             </div>
           </SwiperSlide>

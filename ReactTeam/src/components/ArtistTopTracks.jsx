@@ -27,7 +27,7 @@ const ArtistTopTracks = ({ authorization, id }) => {
   }
 
   const tracks = resolved.data.tracks; // API 응답의 tracks 사용
-  console.log("가져온 인기 앨범 데이터:", tracks);
+  // console.log("가져온 인기 앨범 데이터:", tracks);
 
   const tracksIds = tracks.map(tracks => tracks.id).join(',');
 

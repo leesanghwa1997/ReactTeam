@@ -39,7 +39,7 @@ const GetUsersFavoriteTracks = ({ authorization }) => {
   }, []);
 
   const ids = [...new Set(data.map((item) => item.track.id))].join(',');
-  console.log(ids);
+  // console.log(ids);
 
   return (
     <ScrollContainer>

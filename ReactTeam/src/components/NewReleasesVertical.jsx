@@ -89,7 +89,7 @@ const NewReleasesVertical = ({ authorization }) => {
   }, [handleReachEnd, isLoading]); // handleReachEnd가 변경될 때만 재생성됨
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
