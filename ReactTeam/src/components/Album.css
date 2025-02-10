@@ -19,9 +19,18 @@
 }
 
 .album .info .thumb img {
-
   width: 100%;
   aspect-ratio: 1 / 1;
+}
+
+.album .info .thumb .likeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.album .info .thumb .likeBtn button {
+  display: block;
 }
 
 .album-play {
@@ -38,7 +47,6 @@
   color: #666;
   transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-
 }
 
 .album-play:hover {

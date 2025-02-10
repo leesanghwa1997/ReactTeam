@@ -8,6 +8,7 @@ import { Navigation, Pagination, FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import RemoveUserAlbumButton from './RemoveUserAlbumButton';
 
 const GetUsersFavoriteAlbum = ({ authorization }) => {
   const endpoint = 'https://api.spotify.com/v1/me/albums?limit=10';
@@ -36,17 +37,13 @@ const GetUsersFavoriteAlbum = ({ authorization }) => {
         {data.map((item) => (
           <SwiperSlide key={item.album.id}>
             <div className="card">
-              <div
-                className="thumb"
-                onClick={() => handleAlbumClick(item.album)}
-              >
-                <img
-                  src={
-                    item.album.images[0]?.url ||
-                    'https://via.placeholder.com/150'
-                  }
+              <div className="thumb">
+                <img onClick={() => handleAlbumClick(item.album)} src={item.album.images[0]?.url || 'https://via.placeholder.com/150'}
                   alt={item.album.name}
                 />
+                <div className='likeBtn'>
+                  {item.album.id ? <RemoveUserAlbumButton albumId={item.album.id} /> : null}
+                </div>
               </div>
               <div className="text">
                 <div className="tit">{item.album.name}</div>

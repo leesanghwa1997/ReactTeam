@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+.NewReleases {
+  position: relative;
+}
+
+.NewReleases .likeBtn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.NewReleases .likeBtn button {
+  display: block;
+}
